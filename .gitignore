@@ -1,0 +1,16 @@
+// files
+*.pdf
+*.txt
+
+// executables
+*.out
+
+// object files
+*.o
+
+// libraries
+*.a
+*.so
+
+// vs code settings
+.vscode
