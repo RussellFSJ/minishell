@@ -1,0 +1,7 @@
+# echo "hello world" > out.txt | grep hello
+# one command per block: CMD, then ARGV<TAB>words, then REDIR<TAB>TYPE<TAB>target
+CMD
+ARGV	echo	hello world
+REDIR	OUT	out.txt
+CMD
+ARGV	grep	hello

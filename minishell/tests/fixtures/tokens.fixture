@@ -1,0 +1,9 @@
+# echo "hello $USER" | grep hello > out.txt
+# one token per line: TYPE<TAB>value  (operators carry no value)
+WORD	echo
+WORD	"hello $USER"
+PIPE
+WORD	grep
+WORD	hello
+REDIR_OUT
+WORD	out.txt
