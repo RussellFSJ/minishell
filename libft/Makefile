@@ -14,7 +14,7 @@ all: $(NAME)
 $(NAME): $(OBJ_FILES)
 	ar rcs $(NAME) $(OBJ_FILES)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c include/libft.h
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 

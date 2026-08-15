@@ -7,11 +7,11 @@ DEPFLAGS    := -MMD -MP
 SRC_DIR     := src
 OBJ_DIR     := obj
 TEST_DIR    := tests
-INC_DIR     := includes
+INC_DIR     := include
 LIBFT_DIR   := libft
 LIBFT       := $(LIBFT_DIR)/libft.a
 
-INCLUDES    := -I$(INC_DIR) -I$(LIBFT_DIR)
+INCLUDES    := -I$(INC_DIR) -I$(LIBFT_DIR)/include
 LDLIBS      := -lreadline
 
 # readline: if the link fails on undefined tputs/tgetent, the cluster's

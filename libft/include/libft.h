@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
+/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 20:14:38 by rfoo              #+#    #+#             */
-/*   Updated: 2026/05/21 17:02:11 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/08/15 20:04:29 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void		ft_putendl_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
 void		ft_swap(int *a, int *b);
 long		ft_atol(const char *nptr);
+int			ft_strcmp(const char *s1, const char *s2);
+int			ft_isspace(int c);
 
 // linked list 
 typedef struct s_list
