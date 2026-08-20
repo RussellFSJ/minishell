@@ -5,7 +5,7 @@ CFLAGS      := -Wall -Wextra -Werror
 DEPFLAGS    := -MMD -MP
 
 SRC_DIR     := src
-OBJ_DIR     := obj
+BUILD_DIR    := build
 TEST_DIR    := tests
 INC_DIR     := include
 LIBFT_DIR   := libft
@@ -38,17 +38,17 @@ SIG_SRC     := signals/signals.c signals/signals_heredoc.c
 SRCS        := main.c $(ENV_SRC) $(LEX_SRC) $(BLT_SRC) $(CLN_SRC) \
                $(PRS_SRC) $(EXP_SRC) $(EXE_SRC) $(RDR_SRC) $(SIG_SRC)
 
-OBJS        := $(SRCS:%.c=$(OBJ_DIR)/%.o)
+OBJS        := $(SRCS:%.c=$(BUILD_DIR)/%.o)
 DEPS        := $(OBJS:.o=.d)
 
-ENV_OBJ     := $(ENV_SRC:%.c=$(OBJ_DIR)/%.o)
-LEX_OBJ     := $(LEX_SRC:%.c=$(OBJ_DIR)/%.o)
-BLT_OBJ     := $(BLT_SRC:%.c=$(OBJ_DIR)/%.o)
-CLN_OBJ     := $(CLN_SRC:%.c=$(OBJ_DIR)/%.o)
-PRS_OBJ     := $(PRS_SRC:%.c=$(OBJ_DIR)/%.o)
-EXE_OBJ     := $(EXE_SRC:%.c=$(OBJ_DIR)/%.o) \
-               $(RDR_SRC:%.c=$(OBJ_DIR)/%.o) \
-               $(SIG_SRC:%.c=$(OBJ_DIR)/%.o)
+ENV_OBJ     := $(ENV_SRC:%.c=$(BUILD_DIR)/%.o)
+LEX_OBJ     := $(LEX_SRC:%.c=$(BUILD_DIR)/%.o)
+BLT_OBJ     := $(BLT_SRC:%.c=$(BUILD_DIR)/%.o)
+CLN_OBJ     := $(CLN_SRC:%.c=$(BUILD_DIR)/%.o)
+PRS_OBJ     := $(PRS_SRC:%.c=$(BUILD_DIR)/%.o)
+EXE_OBJ     := $(EXE_SRC:%.c=$(BUILD_DIR)/%.o) \
+               $(RDR_SRC:%.c=$(BUILD_DIR)/%.o) \
+               $(SIG_SRC:%.c=$(BUILD_DIR)/%.o)
 
 TESTS       := test_env test_lexer test_builtin test_parser test_exec
 
@@ -62,7 +62,7 @@ $(NAME): $(LIBFT) $(OBJS)
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(DEPFLAGS) $(INCLUDES) -c $< -o $@
 
@@ -88,7 +88,7 @@ test_exec: $(TEST_DIR)/test_exec.c $(LIBFT) $(EXE_OBJ) $(BLT_OBJ) $(ENV_OBJ) \
 		$(CLN_OBJ) $(LIBFT) -o $@
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(BUILD_DIR)
 	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
