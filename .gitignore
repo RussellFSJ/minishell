@@ -6,6 +6,7 @@
 *.out
 
 // object files
+./build
 *.o
 
 // libraries
@@ -14,3 +15,9 @@
 
 // vs code settings
 .vscode
+
+// executable(s)
+minishell
+
+// test(s)
+./tests
