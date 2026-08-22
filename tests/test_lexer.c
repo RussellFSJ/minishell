@@ -6,11 +6,12 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:15:54 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/23 04:39:36 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/23 04:45:12 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "cleanup.h"
 #include <stdio.h>
 
 int	main(void)
@@ -21,6 +22,6 @@ int	main(void)
 	tokens = lex("cat < infile | grep \"hello world\" >> outfile", &error);
 	printf("tokens=%p error=%d\n", (void *)tokens, error);
 	dump_tokens(tokens, 1);
+	free_tokens(tokens);
 	return (0);
 }
-
