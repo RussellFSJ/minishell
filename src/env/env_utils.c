@@ -6,11 +6,9 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:45 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/22 16:21:51 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/22 16:44:09 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "env.h"
 
 #include "env.h"
 #include "libft.h"
@@ -54,4 +52,3 @@ void	env_add_back(t_env **env, t_env *node)
 		current = current->next;
 	current->next = node;
 }
-
