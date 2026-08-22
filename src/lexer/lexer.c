@@ -6,14 +6,15 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:15:18 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/23 04:29:10 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/23 06:11:42 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "libft.h"
+#include "cleanup.h"
 
-static void skip_spaces(const char *line, int *pos)
+static void	skip_spaces(const char *line, int *pos)
 {
 	while (line[*pos] && ft_isspace(line[*pos]))
 		(*pos)++;
@@ -37,14 +38,17 @@ t_token	*lex(const char *line, int *error)
 		else
 			*error = lex_word(line, &pos, &list);
 		if (*error == -1)
-			return (list);
+		{
+			free_tokens(list);
+			return (NULL);
+		}
 	}
 	return (list);
 }
 
 t_token	*token_new(t_token_type type, char *value)
 {
-	t_token *node;
+	t_token	*node;
 
 	node = malloc(sizeof(t_token));
 	if (node == NULL)
@@ -57,14 +61,14 @@ t_token	*token_new(t_token_type type, char *value)
 
 void	token_add_back(t_token **list, t_token *node)
 {
-	t_token *last;
+	t_token	*last;
 
 	if (list == NULL || node == NULL )
-		return;
+		return ;
 	if (*list == NULL)
 	{
 		*list = node;
-		return;
+		return ;
 	}
 	last = *list;
 	while (last->next != NULL)
