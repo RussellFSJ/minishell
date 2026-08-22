@@ -6,7 +6,7 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:13:56 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:48:02 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/23 03:33:45 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@ int		lex_word(const char *line, int *pos, t_token **list);
 int		lex_operator(const char *line, int *pos, t_token **list);
 int		quote_scan(const char *line, int *pos);
 void	dump_tokens(t_token *tokens, int fd);
+int	is_operator_start(char c);
 
 #endif
