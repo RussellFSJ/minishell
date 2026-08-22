@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/06 12:13:50 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/22 20:05:57 by rfoo             ###   ########.fr       */
+/*   Created: 2026/08/22 19:59:44 by rfoo              #+#    #+#             */
+/*   Updated: 2026/08/22 20:04:35 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
+# include "builtins.h"
+# include "cleanup.h"
+# include "env.h"
+# include "executor.h"
+# include "expander.h"
+# include "lexer.h"
+# include "parser.h"
+# include "signals.h"
 # include "types.h"
 
-int		execute(t_shell *shell, t_command *cmds);
-int		pipeline_run(t_shell *shell, t_command *cmds);
-char	*path_resolve(t_env *env, const char *name);
-void	child_run(t_shell *shell, t_command *cmd);
-int		status_collect(t_shell *shell, int last_pid);
-int		status_decode(int wait_status);
-int		redirect_apply(t_command *cmd);
-int		heredoc_collect(t_shell *shell, t_command *cmds);
+# include <stdlib.h>
+# include <sys/wait.h>
 
 #endif
