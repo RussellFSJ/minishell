@@ -6,7 +6,7 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:13 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/30 05:25:47 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/30 05:40:38 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,7 @@ int	builtin_dispatch(t_shell *shell, t_command *cmd)
 		return (builtin_unset(shell, cmd->argv));
 	if (ft_strcmp(name, "env") == 0)
 		return (builtin_env(shell, cmd->argv));
-	return (builtin_exit(shell, cmd->argv));
+	if (ft_strcmp(name, "exit") == 0)
+		return (builtin_exit(shell, cmd->argv));
+	return (-1);
 }
