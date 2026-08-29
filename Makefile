@@ -28,8 +28,8 @@ CLN_SRC     := cleanup/free_tokens.c cleanup/free_commands.c \
                cleanup/free_env.c
 PRS_SRC 	:= parser/parser.c parser/parser_args.c parser/parser_redirs.c \
 				parser/parser_syntax.c
-EXP_SRC     := expander/expander.c expander/expander_variable.c \
-               expander/expander_quotes.c expander/expander_utils.c
+EXP_SRC 	:= expander/expander.c expander/expander_variable.c \
+				expander/expander_quotes.c expander/expander_utils.c
 EXE_SRC     := executor/executor.c executor/executor_pipes.c \
                executor/executor_path.c executor/executor_child.c \
                executor/executor_status.c
@@ -47,11 +47,12 @@ LEX_OBJ     := $(LEX_SRC:%.c=$(BUILD_DIR)/%.o)
 BLT_OBJ     := $(BLT_SRC:%.c=$(BUILD_DIR)/%.o)
 CLN_OBJ     := $(CLN_SRC:%.c=$(BUILD_DIR)/%.o)
 PRS_OBJ     := $(PRS_SRC:%.c=$(BUILD_DIR)/%.o)
+EXP_OBJ 	:= $(EXP_SRC:%.c=$(BUILD_DIR)/%.o)
 EXE_OBJ     := $(EXE_SRC:%.c=$(BUILD_DIR)/%.o) \
                $(RDR_SRC:%.c=$(BUILD_DIR)/%.o) \
                $(SIG_SRC:%.c=$(BUILD_DIR)/%.o)
 
-TESTS       := test_env test_lexer test_builtin test_parser test_exec
+TESTS 		:= test_env test_lexer test_builtin test_parser test_expander test_exec
 
 all: $(NAME)
 
@@ -84,6 +85,11 @@ test_parser: $(TEST_DIR)/test_parser.c $(LIBFT) $(LEX_OBJ) $(PRS_OBJ) $(CLN_OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $< $(LEX_OBJ) $(PRS_OBJ) $(CLN_OBJ) \
 		$(LIBFT) -o $@
 
+test_expander: $(TEST_DIR)/test_expander.c $(LIBFT) $(EXP_OBJ) $(ENV_OBJ) \
+	$(LEX_OBJ) $(PRS_OBJ) $(CLN_OBJ)
+	$(CC) $(CFLAGS) $(INCLUDES) $< $(EXP_OBJ) $(ENV_OBJ) $(LEX_OBJ) \
+		$(PRS_OBJ) $(CLN_OBJ) $(LIBFT) -o $@
+		
 test_exec: $(TEST_DIR)/test_exec.c $(LIBFT) $(EXE_OBJ) $(BLT_OBJ) $(ENV_OBJ) \
            $(CLN_OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $< $(EXE_OBJ) $(BLT_OBJ) $(ENV_OBJ) \
