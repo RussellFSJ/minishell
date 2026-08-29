@@ -26,7 +26,8 @@ BLT_SRC     := builtins/builtin_dispatch.c builtins/builtin_echo_pwd.c \
                builtins/builtin_unset_env.c builtins/builtin_exit.c
 CLN_SRC     := cleanup/free_tokens.c cleanup/free_commands.c \
                cleanup/free_env.c
-PRS_SRC     := parser/parser.c parser/parser_redirs.c parser/parser_syntax.c
+PRS_SRC 	:= parser/parser.c parser/parser_args.c parser/parser_redirs.c \
+				parser/parser_syntax.c
 EXP_SRC     := expander/expander.c expander/expander_variable.c \
                expander/expander_quotes.c
 EXE_SRC     := executor/executor.c executor/executor_pipes.c \
