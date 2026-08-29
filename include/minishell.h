@@ -6,7 +6,7 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:59:44 by rfoo              #+#    #+#             */
-/*   Updated: 2026/08/29 23:40:38 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/30 05:30:33 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@
 
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <unistd.h>
+# include <stdio.h>
 
 #endif
