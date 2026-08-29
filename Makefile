@@ -29,7 +29,7 @@ CLN_SRC     := cleanup/free_tokens.c cleanup/free_commands.c \
 PRS_SRC 	:= parser/parser.c parser/parser_args.c parser/parser_redirs.c \
 				parser/parser_syntax.c
 EXP_SRC     := expander/expander.c expander/expander_variable.c \
-               expander/expander_quotes.c
+               expander/expander_quotes.c expander/expander_utils.c
 EXE_SRC     := executor/executor.c executor/executor_pipes.c \
                executor/executor_path.c executor/executor_child.c \
                executor/executor_status.c
