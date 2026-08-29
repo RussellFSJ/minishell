@@ -6,11 +6,9 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:24 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/30 05:27:03 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/30 05:45:48 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "builtins.h"
 
 #include "minishell.h"
 
