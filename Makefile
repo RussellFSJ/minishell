@@ -80,8 +80,9 @@ test_builtin: $(TEST_DIR)/test_builtin.c $(LIBFT) $(BLT_OBJ) $(ENV_OBJ) \
 	$(CC) $(CFLAGS) $(INCLUDES) $< $(BLT_OBJ) $(ENV_OBJ) $(CLN_OBJ) \
 		$(LIBFT) -o $@
 
-test_parser: $(TEST_DIR)/test_parser.c $(LIBFT) $(PRS_OBJ) $(CLN_OBJ)
-	$(CC) $(CFLAGS) $(INCLUDES) $< $(PRS_OBJ) $(CLN_OBJ) $(LIBFT) -o $@
+test_parser: $(TEST_DIR)/test_parser.c $(LIBFT) $(LEX_OBJ) $(PRS_OBJ) $(CLN_OBJ)
+	$(CC) $(CFLAGS) $(INCLUDES) $< $(LEX_OBJ) $(PRS_OBJ) $(CLN_OBJ) \
+		$(LIBFT) -o $@
 
 test_exec: $(TEST_DIR)/test_exec.c $(LIBFT) $(EXE_OBJ) $(BLT_OBJ) $(ENV_OBJ) \
            $(CLN_OBJ)
