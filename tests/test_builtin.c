@@ -6,7 +6,7 @@
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:15:46 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/30 05:35:12 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/08/30 05:43:07 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	test_dispatch(t_shell *shell)
 	printf("is_builtin(ls) = %d\n", is_builtin("ls"));
 	printf("dispatch echo:\n");
 	fflush(stdout);
-	printf("status = %d\n", builtin_dispatch(shell, &cmd));;
+	printf("status = %d\n", builtin_dispatch(shell, &cmd));
 }
 
 static void	test_echo_pwd(t_shell *shell)
