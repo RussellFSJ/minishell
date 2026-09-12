@@ -3,24 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   executor_status.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:56 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:55:33 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/09/12 22:04:47 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "minishell.h"
 
 int	status_collect(t_shell *shell, int last_pid)
 {
-	(void)shell;
-	(void)last_pid;
-	return (0);
+	int	status;
+
+	if (waitpid(last_pid, &status, 0) == -1)
+		return (-1);
+	shell->last_status = status_decode(status);
+	return (shell->last_status);
 }
 
 int	status_decode(int wait_status)
 {
-	(void)wait_status;
-	return (0);
+	if (WIFEXITED(wait_status))
+		return (WEXITSTATUS(wait_status));
+	if (WIFSIGNALED(wait_status))
+		return (128 + WTERMSIG(wait_status));
+	return (1);
 }
