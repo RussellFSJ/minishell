@@ -3,17 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   executor_child.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:48 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:55:13 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/09/20 00:52:42 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "minishell.h"
+
+static void	child_error(const char *name, int error)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	if (error == ENOENT && !ft_strchr(name, '/'))
+	{
+		ft_putstr_fd((char *)name, STDERR_FILENO);
+		ft_putendl_fd(": command not found", STDERR_FILENO);
+	}
+	else
+	{
+		errno = error;
+		perror(name);
+	}
+	if (error == ENOENT || error == ENOTDIR)
+		exit(127);
+	if (error == ENOMEM)
+		exit(1);
+	exit(126);
+}
+
+static void	child_exec(t_shell *shell, t_command *cmd)
+{
+	char			*path;
+	char			**envp;
+	int				error;
+	struct stat	info;
+
+	path = path_resolve(shell->env, cmd->argv[0]);
+	if (!path)
+		child_error(cmd->argv[0], errno);
+	envp = env_to_array(shell->env);
+	if (!envp)
+	{
+		free(path);
+		child_error(cmd->argv[0], ENOMEM);
+	}
+	if (stat(path, &info) == 0 && S_ISDIR(info.st_mode))
+		error = EISDIR;
+	else
+	{
+		execve(path, cmd->argv, envp);
+		error = errno;
+	}
+	free(path);
+	free_array(envp);
+	child_error(cmd->argv[0], error);
+}
 
 void	child_run(t_shell *shell, t_command *cmd)
 {
-	(void)shell;
-	(void)cmd;
+	signals_setup_child();
+	if (redirect_apply(cmd) != 0)
+		exit(1);
+	if (!cmd->argv || !cmd->argv[0])
+		exit(0);
+	if (is_builtin(cmd->argv[0]))
+		exit(builtin_dispatch(shell, cmd));
+	child_exec(shell, cmd);
 }
