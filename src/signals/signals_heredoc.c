@@ -14,5 +14,7 @@
 
 void	signals_setup_heredoc(void)
 {
-	return ;
+	rl_catch_signals = 0;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
 }

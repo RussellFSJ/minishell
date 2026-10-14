@@ -14,12 +14,41 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
+static void	prompt_interrupt(int signum)
+{
+	g_signal = signum;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+static void	set_handler(int signum, void (*handler)(int))
+{
+	struct sigaction	action;
+
+	action.sa_handler = handler;
+	action.sa_flags = SA_RESTART;
+	sigemptyset(&action.sa_mask);
+	if (sigaction(signum, &action, NULL) == -1)
+		perror("minishell: sigaction");
+}
+
 void	signals_setup_prompt(void)
 {
-	return ;
+	rl_catch_signals = 0;
+	set_handler(SIGINT, prompt_interrupt);
+	set_handler(SIGQUIT, SIG_IGN);
 }
 
 void	signals_setup_child(void)
 {
-	return ;
+	set_handler(SIGINT, SIG_DFL);
+	set_handler(SIGQUIT, SIG_DFL);
+}
+
+void	signals_setup_wait(void)
+{
+	set_handler(SIGINT, SIG_IGN);
+	set_handler(SIGQUIT, SIG_IGN);
 }

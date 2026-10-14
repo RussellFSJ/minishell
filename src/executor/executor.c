@@ -75,7 +75,11 @@ int	execute(t_shell *shell, t_command *cmds)
 		if (!cmds->next && cmds->argv && is_builtin(cmds->argv[0]))
 			status = parent_builtin(shell, cmds);
 		else
+		{
+			signals_setup_wait();
 			status = pipeline_run(shell, cmds);
+			signals_setup_prompt();
+		}
 	}
 	executor_close_heredocs(cmds);
 	shell->last_status = status;

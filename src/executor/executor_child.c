@@ -6,7 +6,7 @@
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:48 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/09/20 00:52:42 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/10/15 03:50:35 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ static void	child_error(const char *name, int error)
 
 static void	child_exec(t_shell *shell, t_command *cmd)
 {
-	char			*path;
-	char			**envp;
-	int				error;
+	char		*path;
+	char		**envp;
+	int			error;
 	struct stat	info;
 
 	path = path_resolve(shell->env, cmd->argv[0]);

@@ -23,7 +23,11 @@ static void	read_one_line(t_shell *shell)
 {
 	char	*line;
 
+	signals_setup_prompt();
 	line = readline("minishell$ ");
+	if (g_signal == SIGINT)
+		shell->last_status = 130;
+	g_signal = 0;
 	if (line == NULL)
 	{
 		write(STDERR_FILENO, "exit\n", 5);
@@ -39,6 +43,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
 
+	(void)argc;
+	(void)argv;
 	shell_init(&shell, envp);
 	while (shell.should_exit == 0)
 		read_one_line(&shell);

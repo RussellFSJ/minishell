@@ -12,9 +12,85 @@
 
 #include "minishell.h"
 
+static char	*heredoc_name(void)
+{
+	static int	sequence;
+	char		*number;
+	char		*name;
+
+	number = ft_itoa(sequence++);
+	if (!number)
+		return (NULL);
+	name = ft_strjoin("/tmp/minishell-heredoc-", number);
+	free(number);
+	return (name);
+}
+
+static int	heredoc_temp(int *input)
+{
+	char		*name;
+	int			output;
+
+	output = -1;
+	while (output < 0)
+	{
+		name = heredoc_name();
+		if (!name)
+			return (-1);
+		output = open(name, O_WRONLY | O_CREAT | O_EXCL, 0600);
+		if (output >= 0)
+			*input = open(name, O_RDONLY);
+		if (output >= 0)
+			unlink(name);
+		free(name);
+		if (output < 0 && errno != EEXIST)
+			return (-1);
+	}
+	return (output);
+}
+
+static int	heredoc_one(t_shell *shell, t_redir *redir)
+{
+	int	output;
+	int	status;
+
+	if (redir->fd >= 0)
+		close(redir->fd);
+	redir->fd = -1;
+	output = heredoc_temp(&redir->fd);
+	if (output < 0 || redir->fd < 0)
+	{
+		perror("minishell: heredoc");
+		if (output >= 0)
+			close(output);
+		return (1);
+	}
+	status = heredoc_run(shell, redir, output);
+	close(output);
+	return (status);
+}
+
 int	heredoc_collect(t_shell *shell, t_command *cmds)
 {
-	(void)shell;
-	(void)cmds;
+	t_redir	*redir;
+	int		status;
+
+	if (!shell)
+		return (1);
+	while (cmds)
+	{
+		redir = cmds->redirs;
+		while (redir)
+		{
+			if (redir->type == TOKEN_HEREDOC)
+			{
+				status = heredoc_one(shell, redir);
+				if (status != 0)
+					return (status);
+			}
+			redir = redir->next;
+		}
+		cmds = cmds->next;
+	}
 	return (0);
 }
