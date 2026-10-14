@@ -6,7 +6,7 @@
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/22 19:59:44 by rfoo              #+#    #+#             */
-/*   Updated: 2026/09/20 00:50:38 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/10/14 22:38:53 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,14 @@
 # include "signals.h"
 # include "types.h"
 
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <errno.h>
-
-
+# include <fcntl.h>
 
 #endif

@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   types.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:03 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:47:30 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/10/14 22:30:59 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPES_H
 # define TYPES_H
-
-# include <stddef.h>
 
 typedef enum e_token_type
 {
