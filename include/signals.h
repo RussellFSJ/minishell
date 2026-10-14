@@ -15,6 +15,8 @@
 
 # include <signal.h>
 
+typedef void	(*t_signal_handler)(int);
+
 extern volatile sig_atomic_t	g_signal;
 
 void	signals_setup_prompt(void);
