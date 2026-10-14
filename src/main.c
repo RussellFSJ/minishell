@@ -3,19 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:15:40 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:50:19 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/10/14 21:26:47 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "types.h"
-#include "env.h"
+#include "minishell.h"
 
 static void	shell_init(t_shell *shell, char **envp)
 {
@@ -44,8 +39,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
 
-	(void)argc;
-	(void)argv;
 	shell_init(&shell, envp);
 	while (shell.should_exit == 0)
 		read_one_line(&shell);

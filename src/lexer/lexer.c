@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include "cleanup.h"
+#include "minishell.h"
 
 static void	skip_spaces(const char *line, int *pos)
 {

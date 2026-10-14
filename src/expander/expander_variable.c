@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expander.h"
-
 #include "minishell.h"
 
 static int	is_var_start(char c)

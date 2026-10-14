@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
+#include "minishell.h"
 
 static char	*token_type_name(t_token_type type)
 {

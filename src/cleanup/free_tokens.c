@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cleanup.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 void	free_tokens(t_token *tokens)
 {
