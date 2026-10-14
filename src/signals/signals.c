@@ -25,13 +25,8 @@ static void	prompt_interrupt(int signum)
 
 static void	set_handler(int signum, void (*handler)(int))
 {
-	struct sigaction	action;
-
-	action.sa_handler = handler;
-	action.sa_flags = SA_RESTART;
-	sigemptyset(&action.sa_mask);
-	if (sigaction(signum, &action, NULL) == -1)
-		perror("minishell: sigaction");
+	if (signal(signum, handler) == SIG_ERR)
+		perror("minishell: signal");
 }
 
 void	signals_setup_prompt(void)

@@ -6,7 +6,7 @@
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/15 03:49:00 by rfoo              #+#    #+#             */
-/*   Updated: 2026/10/15 03:49:02 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/10/15 05:37:25 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,25 +37,25 @@ static int	heredoc_wait(pid_t pid)
 	return (status_decode(status));
 }
 
-static int	heredoc_ignore(struct sigaction *old_int,
-		struct sigaction *old_quit)
+static int	heredoc_ignore(t_signal_handler *old_int,
+		t_signal_handler *old_quit)
 {
-	struct sigaction	ignore;
-
-	ignore.sa_handler = SIG_IGN;
-	ignore.sa_flags = 0;
-	sigemptyset(&ignore.sa_mask);
-	if (sigaction(SIGINT, &ignore, old_int) < 0)
+	*old_int = signal(SIGINT, SIG_IGN);
+	if (*old_int == SIG_ERR)
 		return (1);
-	if (sigaction(SIGQUIT, &ignore, old_quit) < 0)
-		return (sigaction(SIGINT, old_int, NULL), 1);
+	*old_quit = signal(SIGQUIT, SIG_IGN);
+	if (*old_quit == SIG_ERR)
+	{
+		signal(SIGINT, *old_int);
+		return (1);
+	}
 	return (0);
 }
 
 int	heredoc_run(t_shell *shell, t_redir *redir, int output)
 {
-	struct sigaction	old_int;
-	struct sigaction	old_quit;
+	t_signal_handler	old_int;
+	t_signal_handler	old_quit;
 	pid_t				pid;
 	int					status;
 
@@ -69,7 +69,9 @@ int	heredoc_run(t_shell *shell, t_redir *redir, int output)
 		perror("minishell: heredoc fork");
 	else
 		status = heredoc_wait(pid);
-	sigaction(SIGINT, &old_int, NULL);
-	sigaction(SIGQUIT, &old_quit, NULL);
+	if (signal(SIGINT, old_int) == SIG_ERR)
+		status = 1;
+	if (signal(SIGQUIT, old_quit) == SIG_ERR)
+		status = 1;
 	return (status);
 }
