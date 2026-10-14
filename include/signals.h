@@ -19,6 +19,7 @@ extern volatile sig_atomic_t	g_signal;
 
 void	signals_setup_prompt(void);
 void	signals_setup_child(void);
+void	signals_setup_wait(void);
 void	signals_setup_heredoc(void);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_path.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:50 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:55:19 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/10/15 03:50:06 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static char	*path_candidate(const char *path, size_t len, const char *name)
 
 static char	*path_search(const char *path, const char *name, int *error)
 {
-	char			*candidate;
-	size_t			len;
+	char		*candidate;
+	size_t		len;
 	struct stat	info;
 
 	while (1)

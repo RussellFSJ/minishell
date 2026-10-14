@@ -23,5 +23,7 @@ int		status_collect(t_shell *shell, int last_pid);
 int		status_decode(int wait_status);
 int		redirect_apply(t_command *cmd);
 int		heredoc_collect(t_shell *shell, t_command *cmds);
+int		heredoc_run(t_shell *shell, t_redir *redir, int output);
+int		heredoc_read(t_shell *shell, t_redir *redir, int fd);
 
 #endif
