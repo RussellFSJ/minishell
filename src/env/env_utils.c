@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
-#include "libft.h"
+#include "minishell.h"
 
 t_env	*env_new(char *key, char *value, int exported)
 {

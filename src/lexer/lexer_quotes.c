@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 static int	add_word_token(t_token **list, char *value)
 {

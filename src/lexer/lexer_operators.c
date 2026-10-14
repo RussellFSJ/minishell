@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 int	is_operator_start(char c)
 {

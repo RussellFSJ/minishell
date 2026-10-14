@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
-#include "libft.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 static size_t	env_count_exported(t_env *env)
 {

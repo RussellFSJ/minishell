@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
-#include "libft.h"
+#include "minishell.h"
 
 static int	env_add_entry(t_env **env, char *entry)
 {

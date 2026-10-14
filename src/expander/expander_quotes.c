@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expander.h"
-
 #include "minishell.h"
 
 int	quote_update(char c, int state)
