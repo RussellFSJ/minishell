@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_args.c                                      :+:      :+:    :+:   */
+/*   parser_build_argv.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-static int	is_redirection(t_token_type type);
 static int	count_args(t_token *tokens);
 static int	fill_argv(char **argv, t_token *tokens);
 
@@ -35,15 +34,6 @@ int	parser_build_argv(t_command *cmd, t_token *tokens)
 	return (0);
 }
 
-static int	is_redirection(t_token_type type)
-{
-	if (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
-		return (1);
-	if (type == TOKEN_REDIR_APPEND || type == TOKEN_HEREDOC)
-		return (1);
-	return (0);
-}
-
 static int	count_args(t_token *tokens)
 {
 	int	count;
@@ -51,7 +41,7 @@ static int	count_args(t_token *tokens)
 	count = 0;
 	while (tokens && tokens->type != TOKEN_PIPE)
 	{
-		if (is_redirection(tokens->type))
+		if (parser_is_redirection(tokens->type))
 			tokens = tokens->next;
 		else
 			count++;
@@ -68,7 +58,7 @@ static int	fill_argv(char **argv, t_token *tokens)
 	i = 0;
 	while (tokens && tokens->type != TOKEN_PIPE)
 	{
-		if (is_redirection(tokens->type))
+		if (parser_is_redirection(tokens->type))
 			tokens = tokens->next;
 		else
 		{

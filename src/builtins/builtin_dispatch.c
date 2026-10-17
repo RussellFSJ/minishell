@@ -12,21 +12,6 @@
 
 #include "minishell.h"
 
-int	is_builtin(const char *name)
-{
-	if (!name)
-		return (0);
-	if (ft_strncmp(name, "echo", 5) == 0
-		|| ft_strncmp(name, "cd", 3) == 0
-		|| ft_strncmp(name, "pwd", 4) == 0
-		|| ft_strncmp(name, "export", 7) == 0
-		|| ft_strncmp(name, "unset", 6) == 0
-		|| ft_strncmp(name, "env", 4) == 0
-		|| ft_strncmp(name, "exit", 5) == 0)
-		return (1);
-	return (0);
-}
-
 int	builtin_dispatch(t_shell *shell, t_command *cmd)
 {
 	char	*name;

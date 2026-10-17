@@ -16,7 +16,7 @@
 # include "types.h"
 
 int	builtin_dispatch(t_shell *shell, t_command *cmd);
-int	is_builtin(const char *name);
+int	builtin_is_builtin(const char *name);
 int	builtin_echo(char **argv);
 int	builtin_pwd(void);
 int	builtin_cd(t_shell *shell, char **argv);

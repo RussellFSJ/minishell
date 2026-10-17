@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_process.c                                  :+:      :+:    :+:   */
+/*   heredoc_run.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -63,7 +63,7 @@ static int	heredoc_wait(pid_t pid)
 	}
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		write(STDERR_FILENO, "\n", 1);
-	return (status_decode(status));
+	return (executor_status_decode(status));
 }
 
 static int	heredoc_ignore(t_signal_handler *old_int,

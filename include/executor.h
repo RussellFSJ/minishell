@@ -15,12 +15,12 @@
 
 # include "types.h"
 
-int		execute(t_shell *shell, t_command *cmds);
-int		pipeline_run(t_shell *shell, t_command *cmds);
-char	*path_resolve(t_env *env, const char *name);
-void	child_run(t_shell *shell, t_command *cmd);
-int		status_collect(t_shell *shell, int last_pid);
-int		status_decode(int wait_status);
+int		executor_run(t_shell *shell, t_command *cmds);
+int		executor_pipeline_run(t_shell *shell, t_command *cmds);
+char	*executor_path_resolve(t_env *env, const char *name);
+void	executor_child_run(t_shell *shell, t_command *cmd);
+int		executor_status_collect(t_shell *shell, int last_pid);
+int		executor_status_decode(int wait_status);
 int		redirect_apply(t_command *cmd);
 int		heredoc_collect(t_shell *shell, t_command *cmds);
 int		heredoc_run(t_shell *shell, t_redir *redir, int output);

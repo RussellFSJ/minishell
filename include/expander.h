@@ -27,10 +27,10 @@ typedef struct s_expand_ctx
 int		expand(t_shell *shell, t_command *cmds);
 char	*expand_word(t_shell *shell, const char *word);
 char	*expand_variable(t_shell *shell, const char *word, size_t *pos);
-char	*strip_quotes(const char *word);
-int		quote_update(char c, int state);
-int		append_text(char **result, const char *text);
-int		append_char(char **result, char c);
+char	*expand_strip_quotes(const char *word);
+int		expand_quote_update(char c, int state);
+int		expand_append_text(char **result, const char *text);
+int		expand_append_char(char **result, char c);
 int		expand_argv(t_shell *shell, char **argv);
 int		expand_redirs(t_shell *shell, t_redir *redir);
 

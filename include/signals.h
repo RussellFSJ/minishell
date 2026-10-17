@@ -24,4 +24,6 @@ void	signals_setup_child(void);
 void	signals_setup_wait(void);
 void	signals_setup_heredoc(void);
 
+void	signals_set_handler(int signum, void (*handler)(int));
+
 #endif

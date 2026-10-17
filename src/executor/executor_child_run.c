@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_child.c                                   :+:      :+:    :+:   */
+/*   executor_child_run.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,14 +15,14 @@
 static void	child_error(const char *name, int error);
 static void	child_exec(t_shell *shell, t_command *cmd);
 
-void	child_run(t_shell *shell, t_command *cmd)
+void	executor_child_run(t_shell *shell, t_command *cmd)
 {
 	signals_setup_child();
 	if (redirect_apply(cmd) != 0)
 		exit(1);
 	if (!cmd->argv || !cmd->argv[0])
 		exit(0);
-	if (is_builtin(cmd->argv[0]))
+	if (builtin_is_builtin(cmd->argv[0]))
 		exit(builtin_dispatch(shell, cmd));
 	child_exec(shell, cmd);
 }
@@ -54,7 +54,7 @@ static void	child_exec(t_shell *shell, t_command *cmd)
 	int			error;
 	struct stat	info;
 
-	path = path_resolve(shell->env, cmd->argv[0]);
+	path = executor_path_resolve(shell->env, cmd->argv[0]);
 	if (!path)
 		child_error(cmd->argv[0], errno);
 	envp = env_to_array(shell->env);

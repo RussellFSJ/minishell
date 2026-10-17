@@ -1,32 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_status.c                                  :+:      :+:    :+:   */
+/*   builtin_is_builtin.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/06 12:14:56 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/09/12 22:04:47 by rfoo             ###   ########.fr       */
+/*   Created: 2026/08/06 12:14:13 by ebin-ahm          #+#    #+#             */
+/*   Updated: 2026/10/17 15:38:13 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	status_collect(t_shell *shell, int last_pid)
+int	builtin_is_builtin(const char *name)
 {
-	int	status;
-
-	if (waitpid(last_pid, &status, 0) == -1)
-		return (-1);
-	shell->last_status = status_decode(status);
-	return (shell->last_status);
-}
-
-int	status_decode(int wait_status)
-{
-	if (WIFEXITED(wait_status))
-		return (WEXITSTATUS(wait_status));
-	if (WIFSIGNALED(wait_status))
-		return (128 + WTERMSIG(wait_status));
-	return (1);
+	if (!name)
+		return (0);
+	if (ft_strncmp(name, "echo", 5) == 0
+		|| ft_strncmp(name, "cd", 3) == 0
+		|| ft_strncmp(name, "pwd", 4) == 0
+		|| ft_strncmp(name, "export", 7) == 0
+		|| ft_strncmp(name, "unset", 6) == 0
+		|| ft_strncmp(name, "env", 4) == 0
+		|| ft_strncmp(name, "exit", 5) == 0)
+		return (1);
+	return (0);
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_dump.c                                       :+:      :+:    :+:   */
+/*   lex_dump_tokens.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,7 +14,7 @@
 
 static char	*token_type_name(t_token_type type);
 
-void	dump_tokens(t_token *tokens, int fd)
+void	lex_dump_tokens(t_token *tokens, int fd)
 {
 	while (tokens != NULL)
 	{

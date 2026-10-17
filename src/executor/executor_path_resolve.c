@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_path.c                                    :+:      :+:    :+:   */
+/*   executor_path_resolve.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,7 +15,7 @@
 static char	*path_candidate(const char *path, size_t len, const char *name);
 static char	*path_search(const char *path, const char *name, int *error);
 
-char	*path_resolve(t_env *env, const char *name)
+char	*executor_path_resolve(t_env *env, const char *name)
 {
 	char	*path;
 	char	*result;

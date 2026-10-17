@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_operators.c                                  :+:      :+:    :+:   */
+/*   lex_operator.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,13 +14,6 @@
 
 static t_token_type	operator_type(const char *line, int pos, int *len);
 
-int	is_operator_start(char c)
-{
-	if (c == '|' || c == '<' || c == '>')
-		return (1);
-	return (0);
-}
-
 int	lex_operator(const char *line, int *pos, t_token **list)
 {
 	t_token_type	type;
@@ -32,13 +25,13 @@ int	lex_operator(const char *line, int *pos, t_token **list)
 	value = ft_substr(line, *pos, len);
 	if (value == NULL)
 		return (-1);
-	token = token_new(type, value);
+	token = lex_token_new(type, value);
 	if (token == NULL)
 	{
 		free(value);
 		return (-1);
 	}
-	token_add_back(list, token);
+	lex_token_add_back(list, token);
 	*pos += len;
 	return (0);
 }

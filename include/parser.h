@@ -16,11 +16,13 @@
 # include "types.h"
 
 /* Error codes: 0 success, -1 allocation failure, -2 syntax error. */
-t_command	*parse(t_token *tokens, int *error);
-t_command	*command_new(void);
-void		command_add_back(t_command **list, t_command *node);
+t_command	*parser_parse(t_token *tokens, int *error);
+t_command	*parser_command_new(void);
+void		parser_command_add_back(t_command **list, t_command *node);
 int			parser_add_redir(t_command *cmd, t_token *token);
 int			parser_check_syntax(t_token *tokens);
 int			parser_build_argv(t_command *cmd, t_token *tokens);
+
+int			parser_is_redirection(t_token_type type);
 
 #endif
