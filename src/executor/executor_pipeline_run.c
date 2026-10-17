@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_pipes.c                                   :+:      :+:    :+:   */
+/*   executor_pipeline_run.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,7 +18,7 @@ static int		pipeline_wait(t_shell *shell, int *pids,
 					size_t count, int failed);
 static size_t	command_count(t_command *cmd);
 
-int	pipeline_run(t_shell *shell, t_command *cmds)
+int	executor_pipeline_run(t_shell *shell, t_command *cmds)
 {
 	int		*pids;
 	size_t	count;
@@ -58,7 +58,7 @@ static void	pipe_child(t_shell *shell, t_command *cmd, int input, int *fd)
 		close(fd[0]);
 	if (fd[1] != -1)
 		close(fd[1]);
-	child_run(shell, cmd);
+	executor_child_run(shell, cmd);
 }
 
 static int	pipe_spawn(t_shell *shell, t_command *cmd, int *input)
@@ -91,9 +91,9 @@ static int	pipeline_wait(t_shell *shell, int *pids, size_t count, int failed)
 	result = 1;
 	if (count && !failed)
 	{
-		result = status_collect(shell, pids[count - 1]);
+		result = executor_status_collect(shell, pids[count - 1]);
 		while (result == -1 && errno == EINTR)
-			result = status_collect(shell, pids[count - 1]);
+			result = executor_status_collect(shell, pids[count - 1]);
 		count--;
 	}
 	i = 0;

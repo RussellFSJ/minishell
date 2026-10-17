@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_quotes.c                                  :+:      :+:    :+:   */
+/*   expand_strip_quotes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,26 +12,7 @@
 
 #include "minishell.h"
 
-int	quote_update(char c, int state)
-{
-	if (c == '\'' && state != 2)
-	{
-		if (state == 1)
-			return (0);
-		if (state == 0)
-			return (1);
-	}
-	if (c == '"' && state != 1)
-	{
-		if (state == 2)
-			return (0);
-		if (state == 0)
-			return (2);
-	}
-	return (state);
-}
-
-char	*strip_quotes(const char *word)
+char	*expand_strip_quotes(const char *word)
 {
 	char	*result;
 	size_t	i;
@@ -49,7 +30,7 @@ char	*strip_quotes(const char *word)
 	state = 0;
 	while (word[i])
 	{
-		next = quote_update(word[i], state);
+		next = expand_quote_update(word[i], state);
 		if (next == state)
 			result[j++] = word[i];
 		state = next;

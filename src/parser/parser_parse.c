@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser_parse.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,7 +15,7 @@
 static int	build_redirs(t_command *cmd, t_token *tokens);
 static int	build_command(t_command **list, t_token *tokens);
 
-t_command	*parse(t_token *tokens, int *error)
+t_command	*parser_parse(t_token *tokens, int *error)
 {
 	t_command	*cmds;
 
@@ -44,36 +44,6 @@ t_command	*parse(t_token *tokens, int *error)
 	return (cmds);
 }
 
-t_command	*command_new(void)
-{
-	t_command	*cmd;
-
-	cmd = malloc(sizeof(t_command));
-	if (!cmd)
-		return (NULL);
-	cmd->argv = NULL;
-	cmd->redirs = NULL;
-	cmd->next = NULL;
-	return (cmd);
-}
-
-void	command_add_back(t_command **list, t_command *node)
-{
-	t_command	*last;
-
-	if (!list || !node)
-		return ;
-	if (!*list)
-	{
-		*list = node;
-		return ;
-	}
-	last = *list;
-	while (last->next)
-		last = last->next;
-	last->next = node;
-}
-
 static int	build_redirs(t_command *cmd, t_token *tokens)
 {
 	while (tokens && tokens->type != TOKEN_PIPE)
@@ -93,7 +63,7 @@ static int	build_command(t_command **list, t_token *tokens)
 {
 	t_command	*cmd;
 
-	cmd = command_new();
+	cmd = parser_command_new();
 	if (!cmd)
 		return (-1);
 	if (parser_build_argv(cmd, tokens) == -1
@@ -102,6 +72,6 @@ static int	build_command(t_command **list, t_token *tokens)
 		free_commands(cmd);
 		return (-1);
 	}
-	command_add_back(list, cmd);
+	parser_command_add_back(list, cmd);
 	return (0);
 }

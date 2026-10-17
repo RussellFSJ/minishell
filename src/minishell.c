@@ -68,14 +68,14 @@ static void	process_line(t_shell *shell, const char *line)
 	tokens = lex(line, &error);
 	if (error)
 		return (frontend_error(shell, error));
-	cmds = parse(tokens, &error);
+	cmds = parser_parse(tokens, &error);
 	free_tokens(tokens);
 	if (error)
 		return (frontend_error(shell, error));
 	if (expand(shell, cmds) == -1)
 		frontend_error(shell, -1);
 	else
-		execute(shell, cmds);
+		executor_run(shell, cmds);
 	free_commands(cmds);
 }
 

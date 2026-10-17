@@ -17,12 +17,12 @@
 
 /* Error codes: 0 success, -1 allocation failure, -2 syntax error. */
 t_token	*lex(const char *line, int *error);
-t_token	*token_new(t_token_type type, char *value);
-void	token_add_back(t_token **list, t_token *node);
+t_token	*lex_token_new(t_token_type type, char *value);
+void	lex_token_add_back(t_token **list, t_token *node);
 int		lex_word(const char *line, int *pos, t_token **list);
 int		lex_operator(const char *line, int *pos, t_token **list);
-int		quote_scan(const char *line, int *pos);
-void	dump_tokens(t_token *tokens, int fd);
-int		is_operator_start(char c);
+int		lex_quote_scan(const char *line, int *pos);
+void	lex_dump_tokens(t_token *tokens, int fd);
+int		lex_is_operator_start(char c);
 
 #endif

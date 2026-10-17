@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   executor_run.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,7 +15,7 @@
 static int	parent_builtin(t_shell *shell, t_command *cmd);
 static void	executor_close_heredocs(t_command *cmds);
 
-int	execute(t_shell *shell, t_command *cmds)
+int	executor_run(t_shell *shell, t_command *cmds)
 {
 	int	status;
 
@@ -26,12 +26,12 @@ int	execute(t_shell *shell, t_command *cmds)
 	status = heredoc_collect(shell, cmds);
 	if (status == 0)
 	{
-		if (!cmds->next && cmds->argv && is_builtin(cmds->argv[0]))
+		if (!cmds->next && cmds->argv && builtin_is_builtin(cmds->argv[0]))
 			status = parent_builtin(shell, cmds);
 		else
 		{
 			signals_setup_wait();
-			status = pipeline_run(shell, cmds);
+			status = executor_pipeline_run(shell, cmds);
 			signals_setup_prompt();
 		}
 	}

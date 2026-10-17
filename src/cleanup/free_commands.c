@@ -25,16 +25,3 @@ void	free_commands(t_command *cmds)
 		cmds = next;
 	}
 }
-
-void	free_redirs(t_redir *redirs)
-{
-	t_redir	*next;
-
-	while (redirs)
-	{
-		next = redirs->next;
-		free(redirs->target);
-		free(redirs);
-		redirs = next;
-	}
-}

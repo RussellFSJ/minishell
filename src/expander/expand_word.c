@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.c                                         :+:      :+:    :+:   */
+/*   expand_word.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -38,21 +38,6 @@ char	*expand_word(t_shell *shell, const char *word)
 	return (ctx.result);
 }
 
-int	expand(t_shell *shell, t_command *cmds)
-{
-	if (!shell)
-		return (-1);
-	while (cmds)
-	{
-		if (expand_argv(shell, cmds->argv) == -1)
-			return (-1);
-		if (expand_redirs(shell, cmds->redirs) == -1)
-			return (-1);
-		cmds = cmds->next;
-	}
-	return (0);
-}
-
 static int	expand_dollar(t_shell *shell, t_expand_ctx *ctx)
 {
 	char	*value;
@@ -60,7 +45,7 @@ static int	expand_dollar(t_shell *shell, t_expand_ctx *ctx)
 	value = expand_variable(shell, ctx->word, &ctx->i);
 	if (!value)
 		return (-1);
-	if (append_text(&ctx->result, value) == -1)
+	if (expand_append_text(&ctx->result, value) == -1)
 	{
 		free(value);
 		return (-1);
@@ -73,12 +58,12 @@ static int	process_word_char(t_shell *shell, t_expand_ctx *ctx)
 {
 	int	next;
 
-	next = quote_update(ctx->word[ctx->i], ctx->state);
+	next = expand_quote_update(ctx->word[ctx->i], ctx->state);
 	if (next != ctx->state)
 		ctx->state = next;
 	else if (ctx->word[ctx->i] == '$' && ctx->state != 1)
 		return (expand_dollar(shell, ctx));
-	else if (append_char(&ctx->result, ctx->word[ctx->i]) == -1)
+	else if (expand_append_char(&ctx->result, ctx->word[ctx->i]) == -1)
 		return (-1);
 	ctx->i++;
 	return (0);

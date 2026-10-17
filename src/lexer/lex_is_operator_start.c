@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_heredoc.c                                  :+:      :+:    :+:   */
+/*   lex_is_operator_start.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/06 12:15:34 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:58:45 by ebin-ahm         ###   ########.fr       */
+/*   Created: 2026/08/06 12:15:13 by ebin-ahm          #+#    #+#             */
+/*   Updated: 2026/08/23 06:16:03 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	signals_setup_heredoc(void)
+int	lex_is_operator_start(char c)
 {
-	rl_catch_signals = 0;
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
 }

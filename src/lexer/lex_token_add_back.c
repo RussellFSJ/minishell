@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   lex_token_add_back.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,48 +12,7 @@
 
 #include "minishell.h"
 
-static void	skip_spaces(const char *line, int *pos);
-
-t_token	*lex(const char *line, int *error)
-{
-	t_token	*list;
-	int		pos;
-
-	list = NULL;
-	pos = 0;
-	*error = 0;
-	while (line[pos])
-	{
-		skip_spaces(line, &pos);
-		if (line[pos] == '\0')
-			break ;
-		if (is_operator_start(line[pos]))
-			*error = lex_operator(line, &pos, &list);
-		else
-			*error = lex_word(line, &pos, &list);
-		if (*error != 0)
-		{
-			free_tokens(list);
-			return (NULL);
-		}
-	}
-	return (list);
-}
-
-t_token	*token_new(t_token_type type, char *value)
-{
-	t_token	*node;
-
-	node = malloc(sizeof(t_token));
-	if (node == NULL)
-		return (NULL);
-	node->type = type;
-	node->value = value;
-	node->next = NULL;
-	return (node);
-}
-
-void	token_add_back(t_token **list, t_token *node)
+void	lex_token_add_back(t_token **list, t_token *node)
 {
 	t_token	*last;
 
@@ -68,10 +27,4 @@ void	token_add_back(t_token **list, t_token *node)
 	while (last->next != NULL)
 		last = last->next;
 	last->next = node;
-}
-
-static void	skip_spaces(const char *line, int *pos)
-{
-	while (line[*pos] && ft_strchr(" \t\n\v\f\r", line[*pos]))
-		(*pos)++;
 }

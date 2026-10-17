@@ -25,18 +25,3 @@ void	free_env(t_env *env)
 		env = next;
 	}
 }
-
-void	free_array(char **array)
-{
-	size_t	i;
-
-	if (!array)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
