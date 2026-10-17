@@ -12,11 +12,7 @@
 
 #include "minishell.h"
 
-static void	skip_spaces(const char *line, int *pos)
-{
-	while (line[*pos] && ft_isspace(line[*pos]))
-		(*pos)++;
-}
+static void	skip_spaces(const char *line, int *pos);
 
 t_token	*lex(const char *line, int *error)
 {
@@ -72,4 +68,10 @@ void	token_add_back(t_token **list, t_token *node)
 	while (last->next != NULL)
 		last = last->next;
 	last->next = node;
+}
+
+static void	skip_spaces(const char *line, int *pos)
+{
+	while (line[*pos] && ft_isspace(line[*pos]))
+		(*pos)++;
 }

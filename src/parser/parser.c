@@ -12,37 +12,8 @@
 
 #include "minishell.h"
 
-static int	build_redirs(t_command *cmd, t_token *tokens)
-{
-	while (tokens && tokens->type != TOKEN_PIPE)
-	{
-		if (tokens->type >= TOKEN_REDIR_IN
-			&& tokens->type <= TOKEN_HEREDOC)
-		{
-			if (parser_add_redir(cmd, tokens) == -1)
-				return (-1);
-		}
-		tokens = tokens->next;
-	}
-	return (0);
-}
-
-static int	build_command(t_command **list, t_token *tokens)
-{
-	t_command	*cmd;
-
-	cmd = command_new();
-	if (!cmd)
-		return (-1);
-	if (parser_build_argv(cmd, tokens) == -1
-		|| build_redirs(cmd, tokens) == -1)
-	{
-		free_commands(cmd);
-		return (-1);
-	}
-	command_add_back(list, cmd);
-	return (0);
-}
+static int	build_redirs(t_command *cmd, t_token *tokens);
+static int	build_command(t_command **list, t_token *tokens);
 
 t_command	*parse(t_token *tokens, int *error)
 {
@@ -101,4 +72,36 @@ void	command_add_back(t_command **list, t_command *node)
 	while (last->next)
 		last = last->next;
 	last->next = node;
+}
+
+static int	build_redirs(t_command *cmd, t_token *tokens)
+{
+	while (tokens && tokens->type != TOKEN_PIPE)
+	{
+		if (tokens->type >= TOKEN_REDIR_IN
+			&& tokens->type <= TOKEN_HEREDOC)
+		{
+			if (parser_add_redir(cmd, tokens) == -1)
+				return (-1);
+		}
+		tokens = tokens->next;
+	}
+	return (0);
+}
+
+static int	build_command(t_command **list, t_token *tokens)
+{
+	t_command	*cmd;
+
+	cmd = command_new();
+	if (!cmd)
+		return (-1);
+	if (parser_build_argv(cmd, tokens) == -1
+		|| build_redirs(cmd, tokens) == -1)
+	{
+		free_commands(cmd);
+		return (-1);
+	}
+	command_add_back(list, cmd);
+	return (0);
 }

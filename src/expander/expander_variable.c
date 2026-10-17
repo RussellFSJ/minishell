@@ -12,6 +12,30 @@
 
 #include "minishell.h"
 
+static int	is_var_start(char c);
+static int	is_var_char(char c);
+static char	*get_env_value(t_shell *shell, const char *word, int start, int len);
+
+char	*expand_variable(t_shell *shell, const char *word, int *pos)
+{
+	int	start;
+
+	if (!shell || !word || !pos || word[*pos] != '$')
+		return (NULL);
+	(*pos)++;
+	if (word[*pos] == '?')
+	{
+		(*pos)++;
+		return (ft_itoa(shell->last_status));
+	}
+	if (!is_var_start(word[*pos]))
+		return (ft_strdup("$"));
+	start = *pos;
+	while (is_var_char(word[*pos]))
+		(*pos)++;
+	return (get_env_value(shell, word, start, *pos - start));
+}
+
 static int	is_var_start(char c)
 {
 	return (ft_isalpha(c) || c == '_');
@@ -37,24 +61,4 @@ static char	*get_env_value(t_shell *shell, const char *word, int start, int len)
 		return (ft_strdup(""));
 	result = ft_strdup(value);
 	return (result);
-}
-
-char	*expand_variable(t_shell *shell, const char *word, int *pos)
-{
-	int	start;
-
-	if (!shell || !word || !pos || word[*pos] != '$')
-		return (NULL);
-	(*pos)++;
-	if (word[*pos] == '?')
-	{
-		(*pos)++;
-		return (ft_itoa(shell->last_status));
-	}
-	if (!is_var_start(word[*pos]))
-		return (ft_strdup("$"));
-	start = *pos;
-	while (is_var_char(word[*pos]))
-		(*pos)++;
-	return (get_env_value(shell, word, start, *pos - start));
 }

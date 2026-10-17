@@ -12,6 +12,34 @@
 
 #include "minishell.h"
 
+static int	heredoc_write(int fd, const char *text);
+static int	heredoc_piece(t_shell *shell, char *line, int *i, int fd);
+static int	heredoc_expand(t_shell *shell, char *line, int fd);
+static int	heredoc_line(t_shell *shell, t_redir *redir, char *line, int fd);
+
+int	heredoc_read(t_shell *shell, t_redir *redir, int fd)
+{
+	char	*line;
+	int		status;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			ft_putstr_fd("minishell: warning: heredoc ended before ", 2);
+			ft_putendl_fd(redir->target, 2);
+			return (0);
+		}
+		if (ft_strcmp(line, redir->target) == 0)
+			return (free(line), 0);
+		status = heredoc_line(shell, redir, line, fd);
+		free(line);
+		if (status)
+			return (perror("minishell: heredoc"), 1);
+	}
+}
+
 static int	heredoc_write(int fd, const char *text)
 {
 	ssize_t	written;
@@ -78,27 +106,4 @@ static int	heredoc_line(t_shell *shell, t_redir *redir, char *line, int fd)
 	if (!status)
 		status = heredoc_write(fd, "\n");
 	return (status);
-}
-
-int	heredoc_read(t_shell *shell, t_redir *redir, int fd)
-{
-	char	*line;
-	int		status;
-
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			ft_putstr_fd("minishell: warning: heredoc ended before ", 2);
-			ft_putendl_fd(redir->target, 2);
-			return (0);
-		}
-		if (ft_strcmp(line, redir->target) == 0)
-			return (free(line), 0);
-		status = heredoc_line(shell, redir, line, fd);
-		free(line);
-		if (status)
-			return (perror("minishell: heredoc"), 1);
-	}
 }

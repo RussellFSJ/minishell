@@ -12,6 +12,34 @@
 
 #include "minishell.h"
 
+static size_t	env_count_exported(t_env *env);
+static char	*env_make_entry(t_env *env);
+static char	**env_free_partial(char **array, size_t count);
+
+char	**env_to_array(t_env *env)
+{
+	char	**array;
+	size_t	i;
+
+	array = malloc(sizeof(char *) * (env_count_exported(env) + 1));
+	if (!array)
+		return (NULL);
+	i = 0;
+	while (env)
+	{
+		if (env->exported && env->value)
+		{
+			array[i] = env_make_entry(env);
+			if (!array[i])
+				return (env_free_partial(array, i));
+			i++;
+		}
+		env = env->next;
+	}
+	array[i] = NULL;
+	return (array);
+}
+
 static size_t	env_count_exported(t_env *env)
 {
 	size_t	count;
@@ -51,28 +79,4 @@ static char	**env_free_partial(char **array, size_t count)
 	}
 	free(array);
 	return (NULL);
-}
-
-char	**env_to_array(t_env *env)
-{
-	char	**array;
-	size_t	i;
-
-	array = malloc(sizeof(char *) * (env_count_exported(env) + 1));
-	if (!array)
-		return (NULL);
-	i = 0;
-	while (env)
-	{
-		if (env->exported && env->value)
-		{
-			array[i] = env_make_entry(env);
-			if (!array[i])
-				return (env_free_partial(array, i));
-			i++;
-		}
-		env = env->next;
-	}
-	array[i] = NULL;
-	return (array);
 }

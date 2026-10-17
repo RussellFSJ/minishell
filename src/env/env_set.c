@@ -12,22 +12,7 @@
 
 #include "minishell.h"
 
-static int	env_replace_value(t_env *node, const char *value)
-{
-	char	*new_value;
-
-	new_value = NULL;
-	if (value)
-	{
-		new_value = ft_strdup(value);
-		if (!new_value)
-			return (-1);
-	}
-	free(node->value);
-	node->value = new_value;
-	node->exported = 1;
-	return (0);
-}
+static int	env_replace_value(t_env *node, const char *value);
 
 int	env_set(t_env **env, const char *key, const char *value)
 {
@@ -42,5 +27,22 @@ int	env_set(t_env **env, const char *key, const char *value)
 	if (!node)
 		return (-1);
 	env_add_back(env, node);
+	return (0);
+}
+
+static int	env_replace_value(t_env *node, const char *value)
+{
+	char	*new_value;
+
+	new_value = NULL;
+	if (value)
+	{
+		new_value = ft_strdup(value);
+		if (!new_value)
+			return (-1);
+	}
+	free(node->value);
+	node->value = new_value;
+	node->exported = 1;
 	return (0);
 }

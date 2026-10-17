@@ -12,14 +12,7 @@
 
 #include "minishell.h"
 
-static int	is_redirection(t_token_type type)
-{
-	if (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
-		return (1);
-	if (type == TOKEN_REDIR_APPEND || type == TOKEN_HEREDOC)
-		return (1);
-	return (0);
-}
+static int	is_redirection(t_token_type type);
 
 int	parser_check_syntax(t_token *tokens)
 {
@@ -37,5 +30,14 @@ int	parser_check_syntax(t_token *tokens)
 			return (-1);
 		tokens = tokens->next;
 	}
+	return (0);
+}
+
+static int	is_redirection(t_token_type type)
+{
+	if (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
+		return (1);
+	if (type == TOKEN_REDIR_APPEND || type == TOKEN_HEREDOC)
+		return (1);
 	return (0);
 }

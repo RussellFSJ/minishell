@@ -12,19 +12,7 @@
 
 #include "minishell.h"
 
-static int	add_word_token(t_token **list, char *value)
-{
-	t_token	*token;
-
-	token = token_new(TOKEN_WORD, value);
-	if (token == NULL)
-	{
-		free(value);
-		return (-1);
-	}
-	token_add_back(list, token);
-	return (0);
-}
+static int	add_word_token(t_token **list, char *value);
 
 int	lex_word(const char *line, int *pos, t_token **list)
 {
@@ -60,5 +48,19 @@ int	quote_scan(const char *line, int *pos)
 	if (line[*pos] == '\0')
 		return (-1);
 	(*pos)++;
+	return (0);
+}
+
+static int	add_word_token(t_token **list, char *value)
+{
+	t_token	*token;
+
+	token = token_new(TOKEN_WORD, value);
+	if (token == NULL)
+	{
+		free(value);
+		return (-1);
+	}
+	token_add_back(list, token);
 	return (0);
 }
