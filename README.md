@@ -438,6 +438,42 @@ typedef struct s_shell
 
 ## 8. Design choices that must be preserved
 
+### Lexer identifies words; parser determines their roles
+
+The lexer emits `TOKEN_WORD` for command names, arguments, and redirection targets because a word's role depends on its position. Operators such as `|`, `<`, `>`, `>>`, and `<<` have distinct token types because their syntax can be recognized directly.
+
+For example:
+
+```sh
+echo hello > output.txt
+```
+
+The lexer produces:
+
+```text
+WORD("echo") → WORD("hello") → REDIR_OUT(">") → WORD("output.txt")
+```
+
+The parser then builds `argv = ["echo", "hello", NULL]` and a separate redirection with `type = TOKEN_REDIR_OUT` and `target = "output.txt"`. The word after `>` is a filename, so it is excluded from `argv`.
+
+The same text can have different roles:
+
+```sh
+cat file.txt       # cat is the command name
+echo cat           # cat is an argument
+echo hello > cat   # cat is a redirection target
+```
+
+Even the first word token is not necessarily the command name:
+
+```sh
+> output.txt echo hello
+```
+
+Here, the parser recognizes `output.txt` as the redirection target and makes `echo` the command name in `argv[0]`. Each pipe starts another command. Later, after expansion, the executor resolves `argv[0]` as a builtin or external program.
+
+Keeping these decisions in the parser avoids making the lexer duplicate parsing rules: the lexer identifies pieces of syntax, while the parser determines how those pieces form commands.
+
 ### Lexer preserves quotes until expansion
 
 The lexer checks quote boundaries but does not strip quotation characters before the parser/expander can interpret them. These must remain different:
@@ -895,4 +931,3 @@ Mark Minishell complete **only when all items below are satisfied with evidence 
 **Preserve what is already built; integrate and test it before rewriting it.** The immediate blockers are the missing call chain in `main.c` and the three placeholder builtins. The execution layer has progressed beyond the previous README's stub descriptions and should be **validated and repaired**, not restarted from zero.
 
 **This file is a guide to completing the project, not a declaration that the project is complete.**
-
