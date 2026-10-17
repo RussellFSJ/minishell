@@ -6,7 +6,7 @@
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:13:26 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/10/17 15:38:03 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/10/17 16:55:49 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 int	builtin_dispatch(t_shell *shell, t_command *cmd);
 int	is_builtin(const char *name);
-
 int	builtin_echo(char **argv);
 int	builtin_pwd(void);
 int	builtin_cd(t_shell *shell, char **argv);

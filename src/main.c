@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+static void	shell_init(t_shell *shell, char **envp);
+static void	read_one_line(t_shell *shell);
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	shell;
+
+	(void)argc;
+	(void)argv;
+	shell_init(&shell, envp);
+	while (shell.should_exit == 0)
+		read_one_line(&shell);
+	free_env(shell.env);
+	rl_clear_history();
+	return (shell.last_status);
+}
+
 static void	shell_init(t_shell *shell, char **envp)
 {
 	shell->env = env_init(envp);
@@ -37,18 +54,4 @@ static void	read_one_line(t_shell *shell)
 	if (line[0] != '\0')
 		add_history(line);
 	free(line);
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_shell	shell;
-
-	(void)argc;
-	(void)argv;
-	shell_init(&shell, envp);
-	while (shell.should_exit == 0)
-		read_one_line(&shell);
-	free_env(shell.env);
-	rl_clear_history();
-	return (shell.last_status);
 }

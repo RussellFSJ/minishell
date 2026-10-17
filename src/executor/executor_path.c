@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+static char	*path_candidate(const char *path, size_t len, const char *name);
+static char	*path_search(const char *path, const char *name, int *error);
+
+char	*path_resolve(t_env *env, const char *name)
+{
+	char	*path;
+	char	*result;
+	int		error;
+
+	if (!name || !*name)
+		return (errno = ENOENT, NULL);
+	if (ft_strchr(name, '/'))
+		return (ft_strdup(name));
+	path = env_get(env, "PATH");
+	if (!path)
+		return (ft_strdup(name));
+	error = ENOENT;
+	result = path_search(path, name, &error);
+	if (!result)
+		errno = error;
+	return (result);
+}
+
 static char	*path_candidate(const char *path, size_t len, const char *name)
 {
 	char	*candidate;
@@ -53,24 +76,4 @@ static char	*path_search(const char *path, const char *name, int *error)
 			return (NULL);
 		path += len + 1;
 	}
-}
-
-char	*path_resolve(t_env *env, const char *name)
-{
-	char	*path;
-	char	*result;
-	int		error;
-
-	if (!name || !*name)
-		return (errno = ENOENT, NULL);
-	if (ft_strchr(name, '/'))
-		return (ft_strdup(name));
-	path = env_get(env, "PATH");
-	if (!path)
-		return (ft_strdup(name));
-	error = ENOENT;
-	result = path_search(path, name, &error);
-	if (!result)
-		errno = error;
-	return (result);
 }

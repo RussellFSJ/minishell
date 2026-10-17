@@ -12,6 +12,21 @@
 
 #include "minishell.h"
 
+static char	*token_type_name(t_token_type type);
+
+void	dump_tokens(t_token *tokens, int fd)
+{
+	while (tokens != NULL)
+	{
+		ft_putstr_fd(token_type_name(tokens->type), fd);
+		ft_putstr_fd(": ", fd);
+		if (tokens->value != NULL)
+			ft_putstr_fd(tokens->value, fd);
+		ft_putchar_fd('\n', fd);
+		tokens = tokens->next;
+	}
+}
+
 static char	*token_type_name(t_token_type type)
 {
 	if (type == TOKEN_WORD)
@@ -27,17 +42,4 @@ static char	*token_type_name(t_token_type type)
 	if (type == TOKEN_HEREDOC)
 		return ("HEREDOC");
 	return ("UNKNOWN");
-}
-
-void	dump_tokens(t_token *tokens, int fd)
-{
-	while (tokens != NULL)
-	{
-		ft_putstr_fd(token_type_name(tokens->type), fd);
-		ft_putstr_fd(": ", fd);
-		if (tokens->value != NULL)
-			ft_putstr_fd(tokens->value, fd);
-		ft_putchar_fd('\n', fd);
-		tokens = tokens->next;
-	}
 }

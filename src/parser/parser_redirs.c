@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+static int	has_quotes(char *value);
+static t_redir	*redir_new(t_token *token);
+static void	redir_add_back(t_redir **list, t_redir *node);
+
+int	parser_add_redir(t_command *cmd, t_token *token)
+{
+	t_redir	*redir;
+
+	if (!cmd || !token || !token->next)
+		return (-1);
+	redir = redir_new(token);
+	if (!redir)
+		return (-1);
+	redir_add_back(&cmd->redirs, redir);
+	return (0);
+}
+
 static int	has_quotes(char *value)
 {
 	while (*value)
@@ -58,17 +75,4 @@ static void	redir_add_back(t_redir **list, t_redir *node)
 	while (last->next)
 		last = last->next;
 	last->next = node;
-}
-
-int	parser_add_redir(t_command *cmd, t_token *token)
-{
-	t_redir	*redir;
-
-	if (!cmd || !token || !token->next)
-		return (-1);
-	redir = redir_new(token);
-	if (!redir)
-		return (-1);
-	redir_add_back(&cmd->redirs, redir);
-	return (0);
 }

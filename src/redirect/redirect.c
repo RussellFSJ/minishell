@@ -12,6 +12,25 @@
 
 #include "minishell.h"
 
+static int	redirect_open(t_redir *redir);
+static int	redirect_one(t_redir *redir);
+
+int	redirect_apply(t_command *cmd)
+{
+	t_redir	*redir;
+
+	if (!cmd)
+		return (0);
+	redir = cmd->redirs;
+	while (redir)
+	{
+		if (redirect_one(redir) != 0)
+			return (1);
+		redir = redir->next;
+	}
+	return (0);
+}
+
 static int	redirect_open(t_redir *redir)
 {
 	if (redir->type == TOKEN_HEREDOC)
@@ -51,20 +70,4 @@ static int	redirect_one(t_redir *redir)
 	if (redir->type != TOKEN_HEREDOC && fd != target)
 		close(fd);
 	return (result == -1);
-}
-
-int	redirect_apply(t_command *cmd)
-{
-	t_redir	*redir;
-
-	if (!cmd)
-		return (0);
-	redir = cmd->redirs;
-	while (redir)
-	{
-		if (redirect_one(redir) != 0)
-			return (1);
-		redir = redir->next;
-	}
-	return (0);
 }

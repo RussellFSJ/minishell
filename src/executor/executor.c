@@ -12,6 +12,34 @@
 
 #include "minishell.h"
 
+static int	parent_builtin(t_shell *shell, t_command *cmd);
+static void	executor_close_heredocs(t_command *cmds);
+
+int	execute(t_shell *shell, t_command *cmds)
+{
+	int	status;
+
+	if (!shell)
+		return (1);
+	if (!cmds)
+		return (shell->last_status);
+	status = heredoc_collect(shell, cmds);
+	if (status == 0)
+	{
+		if (!cmds->next && cmds->argv && is_builtin(cmds->argv[0]))
+			status = parent_builtin(shell, cmds);
+		else
+		{
+			signals_setup_wait();
+			status = pipeline_run(shell, cmds);
+			signals_setup_prompt();
+		}
+	}
+	executor_close_heredocs(cmds);
+	shell->last_status = status;
+	return (status);
+}
+
 static int	parent_builtin(t_shell *shell, t_command *cmd)
 {
 	int	saved_in;
@@ -59,29 +87,4 @@ static void	executor_close_heredocs(t_command *cmds)
 		}
 		cmds = cmds->next;
 	}
-}
-
-int	execute(t_shell *shell, t_command *cmds)
-{
-	int	status;
-
-	if (!shell)
-		return (1);
-	if (!cmds)
-		return (shell->last_status);
-	status = heredoc_collect(shell, cmds);
-	if (status == 0)
-	{
-		if (!cmds->next && cmds->argv && is_builtin(cmds->argv[0]))
-			status = parent_builtin(shell, cmds);
-		else
-		{
-			signals_setup_wait();
-			status = pipeline_run(shell, cmds);
-			signals_setup_prompt();
-		}
-	}
-	executor_close_heredocs(cmds);
-	shell->last_status = status;
-	return (status);
 }

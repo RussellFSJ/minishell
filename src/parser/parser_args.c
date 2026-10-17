@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+static int	is_redirection(t_token_type type);
+static int	count_args(t_token *tokens);
+static int	fill_argv(char **argv, t_token *tokens);
+
+int	parser_build_argv(t_command *cmd, t_token *tokens)
+{
+	int	count;
+
+	count = count_args(tokens);
+	if (count == 0)
+		return (0);
+	cmd->argv = ft_calloc(count + 1, sizeof(char *));
+	if (!cmd->argv)
+		return (-1);
+	if (fill_argv(cmd->argv, tokens) == -1)
+	{
+		free_array(cmd->argv);
+		cmd->argv = NULL;
+		return (-1);
+	}
+	return (0);
+}
+
 static int	is_redirection(t_token_type type)
 {
 	if (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
@@ -55,25 +78,6 @@ static int	fill_argv(char **argv, t_token *tokens)
 		}
 		if (tokens)
 			tokens = tokens->next;
-	}
-	return (0);
-}
-
-int	parser_build_argv(t_command *cmd, t_token *tokens)
-{
-	int	count;
-
-	count = count_args(tokens);
-	if (count == 0)
-		return (0);
-	cmd->argv = ft_calloc(count + 1, sizeof(char *));
-	if (!cmd->argv)
-		return (-1);
-	if (fill_argv(cmd->argv, tokens) == -1)
-	{
-		free_array(cmd->argv);
-		cmd->argv = NULL;
-		return (-1);
 	}
 	return (0);
 }
