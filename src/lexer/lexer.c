@@ -31,7 +31,7 @@ t_token	*lex(const char *line, int *error)
 			*error = lex_operator(line, &pos, &list);
 		else
 			*error = lex_word(line, &pos, &list);
-		if (*error == -1)
+		if (*error != 0)
 		{
 			free_tokens(list);
 			return (NULL);
@@ -72,6 +72,6 @@ void	token_add_back(t_token **list, t_token *node)
 
 static void	skip_spaces(const char *line, int *pos)
 {
-	while (line[*pos] && ft_isspace(line[*pos]))
+	while (line[*pos] && ft_strchr(" \t\n\v\f\r", line[*pos]))
 		(*pos)++;
 }

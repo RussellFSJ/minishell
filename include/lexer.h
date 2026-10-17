@@ -15,6 +15,7 @@
 
 # include "types.h"
 
+/* Error codes: 0 success, -1 allocation failure, -2 syntax error. */
 t_token	*lex(const char *line, int *error);
 t_token	*token_new(t_token_type type, char *value);
 void	token_add_back(t_token **list, t_token *node);

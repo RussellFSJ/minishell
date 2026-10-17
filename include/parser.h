@@ -15,6 +15,7 @@
 
 # include "types.h"
 
+/* Error codes: 0 success, -1 allocation failure, -2 syntax error. */
 t_command	*parse(t_token *tokens, int *error);
 t_command	*command_new(void);
 void		command_add_back(t_command **list, t_command *node);
