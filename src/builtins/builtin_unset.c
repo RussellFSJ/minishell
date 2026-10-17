@@ -14,7 +14,7 @@
 
 int	builtin_unset(t_shell *shell, char **argv)
 {
-	int	i;
+	size_t	i;
 
 	if (!shell || !argv)
 		return (1);

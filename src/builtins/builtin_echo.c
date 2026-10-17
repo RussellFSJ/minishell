@@ -16,8 +16,8 @@ static int	is_n_option(const char *arg);
 
 int	builtin_echo(char **argv)
 {
-	int	i;
-	int	newline;
+	size_t	i;
+	int		newline;
 
 	i = 1;
 	newline = 1;
@@ -40,7 +40,7 @@ int	builtin_echo(char **argv)
 
 static int	is_n_option(const char *arg)
 {
-	int	i;
+	size_t	i;
 
 	if (!arg || arg[0] != '-' || arg[1] != 'n')
 		return (0);
