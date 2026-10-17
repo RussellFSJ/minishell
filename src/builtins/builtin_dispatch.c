@@ -16,13 +16,13 @@ int	is_builtin(const char *name)
 {
 	if (!name)
 		return (0);
-	if (ft_strcmp(name, "echo") == 0
-		|| ft_strcmp(name, "cd") == 0
-		|| ft_strcmp(name, "pwd") == 0
-		|| ft_strcmp(name, "export") == 0
-		|| ft_strcmp(name, "unset") == 0
-		|| ft_strcmp(name, "env") == 0
-		|| ft_strcmp(name, "exit") == 0)
+	if (ft_strncmp(name, "echo", 5) == 0
+		|| ft_strncmp(name, "cd", 3) == 0
+		|| ft_strncmp(name, "pwd", 4) == 0
+		|| ft_strncmp(name, "export", 7) == 0
+		|| ft_strncmp(name, "unset", 6) == 0
+		|| ft_strncmp(name, "env", 4) == 0
+		|| ft_strncmp(name, "exit", 5) == 0)
 		return (1);
 	return (0);
 }
@@ -34,19 +34,19 @@ int	builtin_dispatch(t_shell *shell, t_command *cmd)
 	if (!shell || !cmd || !cmd->argv || !cmd->argv[0])
 		return (-1);
 	name = cmd->argv[0];
-	if (ft_strcmp(name, "echo") == 0)
+	if (ft_strncmp(name, "echo", 5) == 0)
 		return (builtin_echo(cmd->argv));
-	if (ft_strcmp(name, "cd") == 0)
+	if (ft_strncmp(name, "cd", 3) == 0)
 		return (builtin_cd(shell, cmd->argv));
-	if (ft_strcmp(name, "pwd") == 0)
+	if (ft_strncmp(name, "pwd", 4) == 0)
 		return (builtin_pwd());
-	if (ft_strcmp(name, "export") == 0)
+	if (ft_strncmp(name, "export", 7) == 0)
 		return (builtin_export(shell, cmd->argv));
-	if (ft_strcmp(name, "unset") == 0)
+	if (ft_strncmp(name, "unset", 6) == 0)
 		return (builtin_unset(shell, cmd->argv));
-	if (ft_strcmp(name, "env") == 0)
+	if (ft_strncmp(name, "env", 4) == 0)
 		return (builtin_env(shell));
-	if (ft_strcmp(name, "exit") == 0)
+	if (ft_strncmp(name, "exit", 5) == 0)
 		return (builtin_exit(shell, cmd->argv));
 	return (-1);
 }

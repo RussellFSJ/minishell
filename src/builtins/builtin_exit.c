@@ -15,7 +15,7 @@
 
 static int	exit_parse_status(const char *arg, int *status);
 static int	exit_check_overflow(const char *arg, int negative,
-			unsigned long long *value);
+				unsigned long long *value);
 static int	exit_numeric_error(t_shell *shell, char *arg);
 
 int	builtin_exit(t_shell *shell, char **argv)
