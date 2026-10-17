@@ -36,7 +36,7 @@ int	append_char(char **result, char c)
 int	expand_argv(t_shell *shell, char **argv)
 {
 	char	*expanded;
-	int		i;
+	size_t	i;
 
 	if (!argv)
 		return (0);

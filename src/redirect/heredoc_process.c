@@ -15,7 +15,7 @@
 static void	heredoc_child(t_shell *shell, t_redir *redir, int output);
 static int	heredoc_wait(pid_t pid);
 static int	heredoc_ignore(t_signal_handler *old_int,
-		t_signal_handler *old_quit);
+				t_signal_handler *old_quit);
 
 int	heredoc_run(t_shell *shell, t_redir *redir, int output)
 {

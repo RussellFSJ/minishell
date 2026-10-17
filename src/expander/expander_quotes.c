@@ -34,7 +34,7 @@ int	quote_update(char c, int state)
 char	*strip_quotes(const char *word)
 {
 	char	*result;
-	int		i;
+	size_t	i;
 	int		j;
 	int		state;
 	int		next;

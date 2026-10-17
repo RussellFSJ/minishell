@@ -17,7 +17,7 @@ static int	env_add_entry(t_env **env, char *entry);
 t_env	*env_init(char **envp)
 {
 	t_env	*env;
-	int		i;
+	size_t	i;
 
 	env = NULL;
 	i = 0;

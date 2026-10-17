@@ -12,16 +12,17 @@
 
 #include "minishell.h"
 
-static void	pipe_child(t_shell *shell, t_command *cmd, int input, int *fd);
-static int	pipe_spawn(t_shell *shell, t_command *cmd, int *input);
-static int	pipeline_wait(t_shell *shell, int *pids, int count, int failed);
-static int	command_count(t_command *cmd);
+static void		pipe_child(t_shell *shell, t_command *cmd, int input, int *fd);
+static int		pipe_spawn(t_shell *shell, t_command *cmd, int *input);
+static int		pipeline_wait(t_shell *shell, int *pids,
+					size_t count, int failed);
+static size_t	command_count(t_command *cmd);
 
 int	pipeline_run(t_shell *shell, t_command *cmds)
 {
-	int	*pids;
-	int	count;
-	int	input;
+	int		*pids;
+	size_t	count;
+	int		input;
 
 	if (!cmds)
 		return (shell->last_status);
@@ -82,10 +83,10 @@ static int	pipe_spawn(t_shell *shell, t_command *cmd, int *input)
 	return (pid);
 }
 
-static int	pipeline_wait(t_shell *shell, int *pids, int count, int failed)
+static int	pipeline_wait(t_shell *shell, int *pids, size_t count, int failed)
 {
-	int	i;
-	int	result;
+	size_t	i;
+	int		result;
 
 	result = 1;
 	if (count && !failed)
@@ -111,9 +112,9 @@ static int	pipeline_wait(t_shell *shell, int *pids, int count, int failed)
 	return (result);
 }
 
-static int	command_count(t_command *cmd)
+static size_t	command_count(t_command *cmd)
 {
-	int	count;
+	size_t	count;
 
 	count = 0;
 	while (cmd)

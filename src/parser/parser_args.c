@@ -63,7 +63,7 @@ static int	count_args(t_token *tokens)
 
 static int	fill_argv(char **argv, t_token *tokens)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (tokens && tokens->type != TOKEN_PIPE)

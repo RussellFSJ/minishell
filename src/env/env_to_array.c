@@ -13,8 +13,8 @@
 #include "minishell.h"
 
 static size_t	env_count_exported(t_env *env);
-static char	*env_make_entry(t_env *env);
-static char	**env_free_partial(char **array, size_t count);
+static char		*env_make_entry(t_env *env);
+static char		**env_free_partial(char **array, size_t count);
 
 char	**env_to_array(t_env *env)
 {
