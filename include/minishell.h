@@ -34,4 +34,6 @@
 # include <errno.h>
 # include <fcntl.h>
 
+int	minishell(char **envp);
+
 #endif

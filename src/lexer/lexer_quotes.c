@@ -20,13 +20,13 @@ int	lex_word(const char *line, int *pos, t_token **list)
 	char	*value;
 
 	start = *pos;
-	while (line[*pos] && !ft_isspace(line[*pos])
+	while (line[*pos] && !ft_strchr(" \t\n\v\f\r", line[*pos])
 		&& !is_operator_start(line[*pos]))
 	{
 		if (line[*pos] == '\'' || line[*pos] == '"')
 		{
 			if (quote_scan(line, pos) == -1)
-				return (-1);
+				return (-2);
 		}
 		else
 			(*pos)++;

@@ -24,7 +24,7 @@ t_command	*parse(t_token *tokens, int *error)
 	*error = 0;
 	if (parser_check_syntax(tokens) == -1)
 	{
-		*error = -1;
+		*error = -2;
 		return (NULL);
 	}
 	cmds = NULL;
