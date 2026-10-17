@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_variable.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:15:05 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/30 03:45:44 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/10/17 20:26:28 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 static int	is_var_start(char c);
 static int	is_var_char(char c);
-static char	*get_env_value(t_shell *shell, const char *word, int start, int len);
+static char	*get_env_value(t_shell *shell,
+				const char *word, size_t start, size_t len);
 
-char	*expand_variable(t_shell *shell, const char *word, int *pos)
+char	*expand_variable(t_shell *shell, const char *word, size_t *pos)
 {
-	int	start;
+	size_t	start;
 
 	if (!shell || !word || !pos || word[*pos] != '$')
 		return (NULL);
@@ -46,7 +47,8 @@ static int	is_var_char(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-static char	*get_env_value(t_shell *shell, const char *word, int start, int len)
+static char	*get_env_value(t_shell *shell, const char *word,
+		size_t start, size_t len)
 {
 	char	*key;
 	char	*value;

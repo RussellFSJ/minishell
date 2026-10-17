@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-static int	has_quotes(char *value);
+static int		has_quotes(char *value);
 static t_redir	*redir_new(t_token *token);
-static void	redir_add_back(t_redir **list, t_redir *node);
+static void		redir_add_back(t_redir **list, t_redir *node);
 
 int	parser_add_redir(t_command *cmd, t_token *token)
 {

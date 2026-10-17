@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 static int	heredoc_write(int fd, const char *text);
-static int	heredoc_piece(t_shell *shell, char *line, int *i, int fd);
+static int	heredoc_piece(t_shell *shell, char *line, size_t *i, int fd);
 static int	heredoc_expand(t_shell *shell, char *line, int fd);
 static int	heredoc_line(t_shell *shell, t_redir *redir, char *line, int fd);
 
@@ -31,7 +31,7 @@ int	heredoc_read(t_shell *shell, t_redir *redir, int fd)
 			ft_putendl_fd(redir->target, 2);
 			return (0);
 		}
-		if (ft_strcmp(line, redir->target) == 0)
+		if (ft_strncmp(line, redir->target, ft_strlen(redir->target) + 1) == 0)
 			return (free(line), 0);
 		status = heredoc_line(shell, redir, line, fd);
 		free(line);
@@ -59,7 +59,7 @@ static int	heredoc_write(int fd, const char *text)
 	return (0);
 }
 
-static int	heredoc_piece(t_shell *shell, char *line, int *i, int fd)
+static int	heredoc_piece(t_shell *shell, char *line, size_t *i, int fd)
 {
 	char	*value;
 	char	text[2];
@@ -84,7 +84,7 @@ static int	heredoc_piece(t_shell *shell, char *line, int *i, int fd)
 
 static int	heredoc_expand(t_shell *shell, char *line, int fd)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (line[i])
