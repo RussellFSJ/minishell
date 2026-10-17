@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_dispatch.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:14:13 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/30 05:40:38 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/10/17 15:38:13 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,17 @@ int	builtin_dispatch(t_shell *shell, t_command *cmd)
 		return (-1);
 	name = cmd->argv[0];
 	if (ft_strcmp(name, "echo") == 0)
-		return (builtin_echo(shell, cmd->argv));
+		return (builtin_echo(cmd->argv));
 	if (ft_strcmp(name, "cd") == 0)
 		return (builtin_cd(shell, cmd->argv));
 	if (ft_strcmp(name, "pwd") == 0)
-		return (builtin_pwd(shell, cmd->argv));
+		return (builtin_pwd());
 	if (ft_strcmp(name, "export") == 0)
 		return (builtin_export(shell, cmd->argv));
 	if (ft_strcmp(name, "unset") == 0)
 		return (builtin_unset(shell, cmd->argv));
 	if (ft_strcmp(name, "env") == 0)
-		return (builtin_env(shell, cmd->argv));
+		return (builtin_env(shell));
 	if (ft_strcmp(name, "exit") == 0)
 		return (builtin_exit(shell, cmd->argv));
 	return (-1);
