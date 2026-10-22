@@ -13,14 +13,18 @@ LDLIBS      := -lreadline
 
 SRC_FILES   := $(shell find $(SRC_DIR) -type f -name '*.c')
 OBJ_FILES   := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
+HEADERS     := $(shell find $(INC_DIR) $(LIBFT_DIR)/include -type f -name '*.h')
+LIBFT_INPUTS := $(shell find $(LIBFT_DIR)/src $(LIBFT_DIR)/include -type f \( -name '*.c' -o -name '*.h' \)) $(LIBFT_DIR)/Makefile
 
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ_FILES)
 	$(CC) $(CFLAGS) $(OBJ_FILES) $(LIBFT) $(LDLIBS) -o $(NAME)
 
-$(LIBFT):
+$(LIBFT): $(LIBFT_INPUTS)
 	$(MAKE) -C $(LIBFT_DIR)
+
+$(OBJ_FILES): $(HEADERS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
