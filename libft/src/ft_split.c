@@ -14,7 +14,7 @@
 
 static int	count_words(char const *s, char c);
 static void	free_arr(char **arr);
-static void	fill_arr(char **arr, char const *s, char c);
+static int	fill_arr(char **arr, char const *s, char c);
 
 char	**ft_split(char const *s, char c)
 {
@@ -25,7 +25,8 @@ char	**ft_split(char const *s, char c)
 	arr = malloc((count_words(s, c) + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);
-	fill_arr(arr, s, c);
+	if (!fill_arr(arr, s, c))
+		return (free_arr(arr), NULL);
 	return (arr);
 }
 
@@ -63,7 +64,7 @@ static void	free_arr(char **arr)
 	free(arr);
 }
 
-static void	fill_arr(char **arr, char const *s, char c)
+static int	fill_arr(char **arr, char const *s, char c)
 {
 	char const	*start;
 	char const	*end;
@@ -82,12 +83,11 @@ static void	fill_arr(char **arr, char const *s, char c)
 				end = s + ft_strlen(s);
 			arr[i] = ft_substr(start, 0, end - start);
 			if (!arr[i])
-			{
-				free_arr(arr);
-			}
+				return (0);
 			s = end;
 			i++;
 		}
 	}
 	arr[i] = NULL;
+	return (1);
 }
