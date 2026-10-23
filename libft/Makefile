@@ -1,5 +1,6 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iinclude
+CFLAGS = -Wall -Wextra -Werror
+INCLUDES = -Iinclude
 
 SRC_DIR = src
 BUILD_DIR = build
@@ -16,13 +17,13 @@ $(NAME): $(OBJ_FILES)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c include/libft.h
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
 
 fclean: clean
-	rm -f $(NAME) 
+	rm -f $(NAME)
 
 re: fclean all
 
