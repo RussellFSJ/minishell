@@ -18,7 +18,7 @@ int	expand(t_shell *shell, t_command *cmds)
 		return (-1);
 	while (cmds)
 	{
-		if (expand_argv(shell, cmds->argv) == -1)
+		if (expand_argv(shell, &cmds->argv) == -1)
 			return (-1);
 		if (expand_redirs(shell, cmds->redirs) == -1)
 			return (-1);

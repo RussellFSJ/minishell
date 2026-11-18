@@ -16,16 +16,17 @@ int	expand_redirs(t_shell *shell, t_redir *redir)
 {
 	char	*expanded;
 
+	(void)shell;
 	while (redir)
 	{
 		if (redir->type == TOKEN_HEREDOC)
+		{
 			expanded = expand_strip_quotes(redir->target);
-		else
-			expanded = expand_word(shell, redir->target);
-		if (!expanded)
-			return (-1);
-		free(redir->target);
-		redir->target = expanded;
+			if (!expanded)
+				return (-1);
+			free(redir->target);
+			redir->target = expanded;
+		}
 		redir = redir->next;
 	}
 	return (0);

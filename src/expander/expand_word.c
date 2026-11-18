@@ -21,31 +21,31 @@ char	*expand_word(t_shell *shell, const char *word)
 
 	if (!word)
 		return (NULL);
-	ctx.result = ft_strdup("");
-	if (!ctx.result)
+	ctx.expanded = ft_strdup("");
+	if (!ctx.expanded)
 		return (NULL);
 	ctx.word = word;
-	ctx.i = 0;
-	ctx.state = 0;
-	while (word[ctx.i])
+	ctx.pos = 0;
+	ctx.quote = QUOTE_NONE;
+	while (word[ctx.pos])
 	{
 		if (process_word_char(shell, &ctx) == -1)
 		{
-			free(ctx.result);
+			free(ctx.expanded);
 			return (NULL);
 		}
 	}
-	return (ctx.result);
+	return (ctx.expanded);
 }
 
 static int	expand_dollar(t_shell *shell, t_expand_ctx *ctx)
 {
 	char	*value;
 
-	value = expand_variable(shell, ctx->word, &ctx->i);
+	value = expand_variable(shell, ctx->word, &ctx->pos);
 	if (!value)
 		return (-1);
-	if (expand_append_text(&ctx->result, value) == -1)
+	if (expand_append_text(&ctx->expanded, value) == -1)
 	{
 		free(value);
 		return (-1);
@@ -56,15 +56,15 @@ static int	expand_dollar(t_shell *shell, t_expand_ctx *ctx)
 
 static int	process_word_char(t_shell *shell, t_expand_ctx *ctx)
 {
-	int	next;
+	t_quote	next_quote;
 
-	next = expand_quote_update(ctx->word[ctx->i], ctx->state);
-	if (next != ctx->state)
-		ctx->state = next;
-	else if (ctx->word[ctx->i] == '$' && ctx->state != 1)
+	next_quote = expand_quote_update(ctx->word[ctx->pos], ctx->quote);
+	if (next_quote != ctx->quote)
+		ctx->quote = next_quote;
+	else if (ctx->word[ctx->pos] == '$' && ctx->quote != QUOTE_SINGLE)
 		return (expand_dollar(shell, ctx));
-	else if (expand_append_char(&ctx->result, ctx->word[ctx->i]) == -1)
+	else if (expand_append_char(&ctx->expanded, ctx->word[ctx->pos]) == -1)
 		return (-1);
-	ctx->i++;
+	ctx->pos++;
 	return (0);
 }

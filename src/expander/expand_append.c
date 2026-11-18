@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_append_text.c                               :+:      :+:    :+:   */
+/*   expand_append.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -22,4 +22,13 @@ int	expand_append_text(char **result, const char *text)
 	free(*result);
 	*result = joined;
 	return (0);
+}
+
+int	expand_append_char(char **result, char c)
+{
+	char	text[2];
+
+	text[0] = c;
+	text[1] = '\0';
+	return (expand_append_text(result, text));
 }

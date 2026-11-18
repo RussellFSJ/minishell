@@ -3,30 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   expand_quote_update.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: russ1337 <russ1337@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:15:03 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/30 03:33:36 by ebin-ahm         ###   ########.fr       */
+/*   Updated: 2026/11/19 03:58:29 by russ1337         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	expand_quote_update(char c, int state)
+t_quote	expand_quote_update(char c, t_quote quote)
 {
-	if (c == '\'' && state != 2)
+	if (c == '\'' && quote != QUOTE_DOUBLE)
 	{
-		if (state == 1)
-			return (0);
-		if (state == 0)
-			return (1);
+		if (quote == QUOTE_SINGLE)
+			return (QUOTE_NONE);
+		if (quote == QUOTE_NONE)
+			return (QUOTE_SINGLE);
 	}
-	if (c == '"' && state != 1)
+	if (c == '"' && quote != QUOTE_SINGLE)
 	{
-		if (state == 2)
-			return (0);
-		if (state == 0)
-			return (2);
+		if (quote == QUOTE_DOUBLE)
+			return (QUOTE_NONE);
+		if (quote == QUOTE_NONE)
+			return (QUOTE_DOUBLE);
 	}
-	return (state);
+	return (quote);
 }
