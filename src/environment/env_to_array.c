@@ -14,30 +14,30 @@
 
 static size_t	env_count_exported(t_env *env);
 static char		*env_make_entry(t_env *env);
-static char		**env_free_partial(char **array, size_t count);
+static char		**env_free_partial(char **envp, size_t count);
 
 char	**env_to_array(t_env *env)
 {
-	char	**array;
+	char	**envp;
 	size_t	i;
 
-	array = malloc(sizeof(char *) * (env_count_exported(env) + 1));
-	if (!array)
+	envp = malloc(sizeof(char *) * (env_count_exported(env) + 1));
+	if (!envp)
 		return (NULL);
 	i = 0;
 	while (env)
 	{
 		if (env->exported && env->value)
 		{
-			array[i] = env_make_entry(env);
-			if (!array[i])
-				return (env_free_partial(array, i));
+			envp[i] = env_make_entry(env);
+			if (!envp[i])
+				return (env_free_partial(envp, i));
 			i++;
 		}
 		env = env->next;
 	}
-	array[i] = NULL;
-	return (array);
+	envp[i] = NULL;
+	return (envp);
 }
 
 static size_t	env_count_exported(t_env *env)
@@ -67,16 +67,16 @@ static char	*env_make_entry(t_env *env)
 	return (entry);
 }
 
-static char	**env_free_partial(char **array, size_t count)
+static char	**env_free_partial(char **envp, size_t count)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < count)
 	{
-		free(array[i]);
+		free(envp[i]);
 		i++;
 	}
-	free(array);
+	free(envp);
 	return (NULL);
 }
