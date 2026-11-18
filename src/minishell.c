@@ -24,39 +24,43 @@ int	minishell(char **envp)
 	shell_init(&shell, envp);
 	while (shell.should_exit == 0)
 		read_one_line(&shell);
-	free_env(shell.env);
-	rl_clear_history();
+	shell_release(&shell);
 	return (shell.last_status);
 }
 
 static void	shell_init(t_shell *shell, char **envp)
 {
+	ft_bzero(shell, sizeof(*shell));
 	shell->env = env_init(envp);
-	shell->last_status = 0;
-	shell->should_exit = 0;
+	if ((!shell->env && envp && envp[0]) || cwd_initialize(shell))
+	{
+		ft_putendl_fd("minishell: initialization failed", 2);
+		shell->last_status = 1;
+		shell->should_exit = 1;
+	}
 }
 
 static void	read_one_line(t_shell *shell)
 {
-	char	*line;
-
 	signals_setup_prompt();
-	line = readline("minishell$ ");
+	shell->line = readline("minishell$ ");
 	if (g_signal == SIGINT)
 		shell->last_status = 130;
 	g_signal = 0;
-	if (line == NULL)
+	if (shell->line == NULL)
 	{
-		write(STDERR_FILENO, "exit\n", 5);
+		if (write_all(STDERR_FILENO, "exit\n", 5))
+			shell->last_status = 1;
 		shell->should_exit = 1;
 		return ;
 	}
-	if (line[0] != '\0')
+	if (shell->line[0] != '\0')
 	{
-		add_history(line);
-		process_line(shell, line);
+		add_history(shell->line);
+		process_line(shell, shell->line);
 	}
-	free(line);
+	free(shell->line);
+	shell->line = NULL;
 }
 
 static void	process_line(t_shell *shell, const char *line)
@@ -72,11 +76,13 @@ static void	process_line(t_shell *shell, const char *line)
 	free_tokens(tokens);
 	if (error)
 		return (frontend_error(shell, error));
+	shell->commands = cmds;
 	if (expand(shell, cmds) == -1)
 		frontend_error(shell, -1);
 	else
 		executor_run(shell, cmds);
 	free_commands(cmds);
+	shell->commands = NULL;
 }
 
 static void	frontend_error(t_shell *shell, int error)

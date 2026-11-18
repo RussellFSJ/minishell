@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_setup_wait.c                               :+:      :+:    :+:   */
+/*   signals_setup.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,6 +11,18 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	signals_set_handler(int signum, void (*handler)(int))
+{
+	if (signal(signum, handler) == SIG_ERR)
+		perror("minishell: signal");
+}
+
+void	signals_setup_child(void)
+{
+	signals_set_handler(SIGINT, SIG_DFL);
+	signals_set_handler(SIGQUIT, SIG_DFL);
+}
 
 void	signals_setup_wait(void)
 {

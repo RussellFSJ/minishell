@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_status_collect.c                          :+:      :+:    :+:   */
+/*   executor_status.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,10 +14,19 @@
 
 int	executor_status_collect(t_shell *shell, int last_pid)
 {
-	int	status;
+	int	wait_status;
 
-	if (waitpid(last_pid, &status, 0) == -1)
+	if (waitpid(last_pid, &wait_status, 0) == -1)
 		return (-1);
-	shell->last_status = executor_status_decode(status);
+	shell->last_status = executor_status_decode(wait_status);
 	return (shell->last_status);
+}
+
+int	executor_status_decode(int wait_status)
+{
+	if (WIFEXITED(wait_status))
+		return (WEXITSTATUS(wait_status));
+	if (WIFSIGNALED(wait_status))
+		return (128 + WTERMSIG(wait_status));
+	return (1);
 }

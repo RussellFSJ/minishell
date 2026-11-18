@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 static char	*heredoc_name(void);
-static int	heredoc_temp(int *input);
+static int	heredoc_temp(int *read_fd);
 static int	heredoc_one(t_shell *shell, t_redir *redir);
 
 int	heredoc_collect(t_shell *shell, t_command *cmds)
@@ -55,46 +55,46 @@ static char	*heredoc_name(void)
 	return (name);
 }
 
-static int	heredoc_temp(int *input)
+static int	heredoc_temp(int *read_fd)
 {
 	char		*name;
-	int			output;
+	int			write_fd;
 
-	output = -1;
-	while (output < 0)
+	write_fd = -1;
+	while (write_fd < 0)
 	{
 		name = heredoc_name();
 		if (!name)
 			return (-1);
-		output = open(name, O_WRONLY | O_CREAT | O_EXCL, 0600);
-		if (output >= 0)
-			*input = open(name, O_RDONLY);
-		if (output >= 0)
+		write_fd = open(name, O_WRONLY | O_CREAT | O_EXCL, 0600);
+		if (write_fd >= 0)
+			*read_fd = open(name, O_RDONLY);
+		if (write_fd >= 0)
 			unlink(name);
 		free(name);
-		if (output < 0 && errno != EEXIST)
+		if (write_fd < 0 && errno != EEXIST)
 			return (-1);
 	}
-	return (output);
+	return (write_fd);
 }
 
 static int	heredoc_one(t_shell *shell, t_redir *redir)
 {
-	int	output;
+	int	write_fd;
 	int	status;
 
 	if (redir->fd >= 0)
 		close(redir->fd);
 	redir->fd = -1;
-	output = heredoc_temp(&redir->fd);
-	if (output < 0 || redir->fd < 0)
+	write_fd = heredoc_temp(&redir->fd);
+	if (write_fd < 0 || redir->fd < 0)
 	{
 		perror("minishell: heredoc");
-		if (output >= 0)
-			close(output);
+		if (write_fd >= 0)
+			close(write_fd);
 		return (1);
 	}
-	status = heredoc_run(shell, redir, output);
-	close(output);
+	status = heredoc_run(shell, redir, write_fd);
+	close(write_fd);
 	return (status);
 }

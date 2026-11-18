@@ -1,22 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_status_decode.c                           :+:      :+:    :+:   */
+/*   shell_release.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/06 12:14:56 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/09/12 22:04:47 by rfoo             ###   ########.fr       */
+/*   Created: 2026/10/22 00:00:00 by rfoo              #+#    #+#             */
+/*   Updated: 2026/10/22 00:00:00 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	executor_status_decode(int wait_status)
+void	shell_release(t_shell *shell)
 {
-	if (WIFEXITED(wait_status))
-		return (WEXITSTATUS(wait_status));
-	if (WIFSIGNALED(wait_status))
-		return (128 + WTERMSIG(wait_status));
-	return (1);
+	heredoc_close_fds(shell->commands, NULL);
+	free_commands(shell->commands);
+	free_env(shell->env);
+	free(shell->cwd);
+	free(shell->line);
+	free(shell->pids);
+	rl_clear_history();
+	shell->commands = NULL;
+	shell->env = NULL;
+	shell->cwd = NULL;
+	shell->line = NULL;
+	shell->pids = NULL;
+}
+
+void	executor_child_exit(t_shell *shell, int status)
+{
+	shell_release(shell);
+	exit(status);
 }

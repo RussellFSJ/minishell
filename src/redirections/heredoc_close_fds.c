@@ -1,19 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_setup_child.c                              :+:      :+:    :+:   */
+/*   heredoc_close_fds.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebin-ahm <ebin-ahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/06 12:15:36 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/08/06 14:58:33 by ebin-ahm         ###   ########.fr       */
+/*   Created: 2026/08/06 12:14:59 by ebin-ahm          #+#    #+#             */
+/*   Updated: 2026/08/06 14:55:02 by ebin-ahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	signals_setup_child(void)
+void	heredoc_close_fds(t_command *cmds, t_command *keep_cmd)
 {
-	signals_set_handler(SIGINT, SIG_DFL);
-	signals_set_handler(SIGQUIT, SIG_DFL);
+	t_redir	*redir;
+
+	while (cmds)
+	{
+		redir = cmds->redirs;
+		while (redir)
+		{
+			if (cmds != keep_cmd && redir->type == TOKEN_HEREDOC
+				&& redir->fd >= 0)
+			{
+				close(redir->fd);
+				redir->fd = -1;
+			}
+			redir = redir->next;
+		}
+		cmds = cmds->next;
+	}
 }

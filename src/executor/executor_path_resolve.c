@@ -17,7 +17,7 @@ static char	*path_search(const char *path, const char *name, int *error);
 
 char	*executor_path_resolve(t_env *env, const char *name)
 {
-	char	*path;
+	char	*search_path;
 	char	*result;
 	int		error;
 
@@ -25,11 +25,11 @@ char	*executor_path_resolve(t_env *env, const char *name)
 		return (errno = ENOENT, NULL);
 	if (ft_strchr(name, '/'))
 		return (ft_strdup(name));
-	path = env_get(env, "PATH");
-	if (!path)
+	search_path = env_get(env, "PATH");
+	if (!search_path)
 		return (ft_strdup(name));
 	error = ENOENT;
-	result = path_search(path, name, &error);
+	result = path_search(search_path, name, &error);
 	if (!result)
 		errno = error;
 	return (result);
@@ -38,16 +38,16 @@ char	*executor_path_resolve(t_env *env, const char *name)
 static char	*path_candidate(const char *path, size_t len, const char *name)
 {
 	char	*candidate;
-	size_t	size;
+	size_t	name_len;
 
-	size = ft_strlen(name);
-	candidate = malloc(len + size + 2);
+	name_len = ft_strlen(name);
+	candidate = malloc(len + name_len + 2);
 	if (!candidate)
 		return (NULL);
 	ft_memcpy(candidate, path, len);
 	if (len)
 		candidate[len++] = '/';
-	ft_memcpy(candidate + len, name, size + 1);
+	ft_memcpy(candidate + len, name, name_len + 1);
 	return (candidate);
 }
 

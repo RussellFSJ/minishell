@@ -12,12 +12,13 @@
 
 #include "minishell.h"
 
-static int	heredoc_write(int fd, const char *text);
-static int	heredoc_piece(t_shell *shell, char *line, size_t *i, int fd);
-static int	heredoc_expand(t_shell *shell, char *line, int fd);
-static int	heredoc_line(t_shell *shell, t_redir *redir, char *line, int fd);
+static int	heredoc_write(int write_fd, const char *text);
+static int	heredoc_piece(t_shell *shell, char *line, size_t *i, int write_fd);
+static int	heredoc_expand(t_shell *shell, char *line, int write_fd);
+static int	heredoc_line(t_shell *shell, t_redir *redir,
+				char *line, int write_fd);
 
-int	heredoc_read(t_shell *shell, t_redir *redir, int fd)
+int	heredoc_read(t_shell *shell, t_redir *redir, int write_fd)
 {
 	char	*line;
 	int		status;
@@ -33,33 +34,19 @@ int	heredoc_read(t_shell *shell, t_redir *redir, int fd)
 		}
 		if (ft_strncmp(line, redir->target, ft_strlen(redir->target) + 1) == 0)
 			return (free(line), 0);
-		status = heredoc_line(shell, redir, line, fd);
+		status = heredoc_line(shell, redir, line, write_fd);
 		free(line);
 		if (status)
 			return (perror("minishell: heredoc"), 1);
 	}
 }
 
-static int	heredoc_write(int fd, const char *text)
+static int	heredoc_write(int write_fd, const char *text)
 {
-	ssize_t	written;
-	size_t	length;
-
-	length = ft_strlen(text);
-	while (length)
-	{
-		written = write(fd, text, length);
-		if (written < 0 && errno == EINTR)
-			continue ;
-		if (written <= 0)
-			return (1);
-		text += written;
-		length -= written;
-	}
-	return (0);
+	return (write_all(write_fd, text, ft_strlen(text)));
 }
 
-static int	heredoc_piece(t_shell *shell, char *line, size_t *i, int fd)
+static int	heredoc_piece(t_shell *shell, char *line, size_t *i, int write_fd)
 {
 	char	*value;
 	char	text[2];
@@ -70,40 +57,38 @@ static int	heredoc_piece(t_shell *shell, char *line, size_t *i, int fd)
 		value = expand_variable(shell, line, i);
 		if (!value)
 			return (1);
-		status = heredoc_write(fd, value);
+		status = heredoc_write(write_fd, value);
 		free(value);
 		return (status);
 	}
-	if (line[*i] == '\\' && (line[*i + 1] == '$'
-			|| line[*i + 1] == '\\' || line[*i + 1] == '`'))
-		(*i)++;
 	text[0] = line[(*i)++];
 	text[1] = '\0';
-	return (heredoc_write(fd, text));
+	return (heredoc_write(write_fd, text));
 }
 
-static int	heredoc_expand(t_shell *shell, char *line, int fd)
+static int	heredoc_expand(t_shell *shell, char *line, int write_fd)
 {
 	size_t	i;
 
 	i = 0;
 	while (line[i])
 	{
-		if (heredoc_piece(shell, line, &i, fd))
+		if (heredoc_piece(shell, line, &i, write_fd))
 			return (1);
 	}
 	return (0);
 }
 
-static int	heredoc_line(t_shell *shell, t_redir *redir, char *line, int fd)
+static int	heredoc_line(t_shell *shell, t_redir *redir,
+		char *line, int write_fd)
 {
 	int	status;
 
 	if (redir->expand_body)
-		status = heredoc_expand(shell, line, fd);
+		status = heredoc_expand(shell, line, write_fd);
 	else
-		status = heredoc_write(fd, line);
+		status = heredoc_write(write_fd, line);
 	if (!status)
-		status = heredoc_write(fd, "\n");
+		status = heredoc_write(write_fd, "\n");
 	return (status);
 }

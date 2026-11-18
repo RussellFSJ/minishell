@@ -56,9 +56,13 @@ typedef struct s_env
 
 typedef struct s_shell
 {
-	t_env	*env;
-	int		last_status;
-	int		should_exit;
+	t_env		*env;
+	char		*cwd;
+	char		*line;
+	t_command	*commands;
+	int			*pids;
+	int			last_status;
+	int			should_exit;
 }	t_shell;
 
 #endif

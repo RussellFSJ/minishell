@@ -25,9 +25,15 @@ void	signals_setup_prompt(void)
 
 static void	prompt_interrupt(int signum)
 {
+	int	saved_errno;
+
+	saved_errno = errno;
 	g_signal = signum;
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (write_all(STDOUT_FILENO, "\n", 1) == 0)
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	errno = saved_errno;
 }

@@ -13,7 +13,6 @@
 #include "minishell.h"
 
 static int	parent_builtin(t_shell *shell, t_command *cmd);
-static void	executor_close_heredocs(t_command *cmds);
 
 int	executor_run(t_shell *shell, t_command *cmds)
 {
@@ -35,56 +34,36 @@ int	executor_run(t_shell *shell, t_command *cmds)
 			signals_setup_prompt();
 		}
 	}
-	executor_close_heredocs(cmds);
+	heredoc_close_fds(cmds, NULL);
 	shell->last_status = status;
 	return (status);
 }
 
 static int	parent_builtin(t_shell *shell, t_command *cmd)
 {
-	int	saved_in;
-	int	saved_out;
+	int	saved_stdin;
+	int	saved_stdout;
 	int	status;
 
-	saved_in = dup(STDIN_FILENO);
-	saved_out = dup(STDOUT_FILENO);
-	if (saved_in == -1 || saved_out == -1)
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	if (saved_stdin == -1 || saved_stdout == -1)
 	{
 		perror("minishell: dup");
-		if (saved_in != -1)
-			close(saved_in);
-		if (saved_out != -1)
-			close(saved_out);
+		if (saved_stdin != -1)
+			close(saved_stdin);
+		if (saved_stdout != -1)
+			close(saved_stdout);
 		return (1);
 	}
 	status = 1;
-	if (redirect_apply(cmd) == 0)
+	if (redirect_apply(shell, cmd) == 0)
 		status = builtin_dispatch(shell, cmd);
-	if (dup2(saved_in, STDIN_FILENO) == -1)
+	if (dup2(saved_stdin, STDIN_FILENO) == -1)
 		status = 1;
-	if (dup2(saved_out, STDOUT_FILENO) == -1)
+	if (dup2(saved_stdout, STDOUT_FILENO) == -1)
 		status = 1;
-	close(saved_in);
-	close(saved_out);
+	close(saved_stdin);
+	close(saved_stdout);
 	return (status);
-}
-
-static void	executor_close_heredocs(t_command *cmds)
-{
-	t_redir	*redir;
-
-	while (cmds)
-	{
-		redir = cmds->redirs;
-		while (redir)
-		{
-			if (redir->type == TOKEN_HEREDOC && redir->fd >= 0)
-			{
-				close(redir->fd);
-				redir->fd = -1;
-			}
-			redir = redir->next;
-		}
-		cmds = cmds->next;
-	}
 }

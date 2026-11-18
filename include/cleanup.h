@@ -13,11 +13,10 @@
 #ifndef CLEANUP_H
 # define CLEANUP_H
 
-# include "types.h"
-
 void	free_tokens(t_token *tokens);
 void	free_commands(t_command *cmds);
 void	free_redirs(t_redir *redirs);
 void	free_array(char **array);
+void	shell_release(t_shell *shell);
 
 #endif
