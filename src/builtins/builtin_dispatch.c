@@ -24,7 +24,7 @@ int	builtin_dispatch(t_shell *shell, t_command *cmd)
 	if (ft_strncmp(name, "cd", 3) == 0)
 		return (builtin_cd(shell, cmd->argv));
 	if (ft_strncmp(name, "pwd", 4) == 0)
-		return (builtin_pwd());
+		return (builtin_pwd(shell));
 	if (ft_strncmp(name, "export", 7) == 0)
 		return (builtin_export(shell, cmd->argv));
 	if (ft_strncmp(name, "unset", 6) == 0)

@@ -23,9 +23,9 @@ int	builtin_env(t_shell *shell)
 	{
 		if (env->exported && env->value)
 		{
-			ft_putstr_fd(env->key, 1);
-			ft_putchar_fd('=', 1);
-			ft_putendl_fd(env->value, 1);
+			if (builtin_write(env->key) || builtin_write("=")
+				|| builtin_putline(env->value))
+				return (builtin_output_error("env"));
 		}
 		env = env->next;
 	}

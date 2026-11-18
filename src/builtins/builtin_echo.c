@@ -17,24 +17,24 @@ static int	is_n_option(const char *arg);
 int	builtin_echo(char **argv)
 {
 	size_t	i;
-	int		newline;
+	int		print_newline;
 
 	i = 1;
-	newline = 1;
+	print_newline = 1;
 	while (argv[i] && is_n_option(argv[i]))
 	{
-		newline = 0;
+		print_newline = 0;
 		i++;
 	}
 	while (argv[i])
 	{
-		ft_putstr_fd(argv[i], 1);
-		if (argv[i + 1])
-			ft_putchar_fd(' ', 1);
+		if (builtin_write(argv[i])
+			|| (argv[i + 1] && builtin_write(" ")))
+			return (builtin_output_error("echo"));
 		i++;
 	}
-	if (newline)
-		ft_putchar_fd('\n', 1);
+	if (print_newline && builtin_write("\n"))
+		return (builtin_output_error("echo"));
 	return (0);
 }
 

@@ -13,6 +13,8 @@
 #include "minishell.h"
 
 static t_env	*export_next(t_env *env, t_env *previous);
+static int		export_print_value(const char *value);
+static int		export_print_node(t_env *node);
 
 int	builtin_export_print(t_env *env)
 {
@@ -21,34 +23,60 @@ int	builtin_export_print(t_env *env)
 	node = export_next(env, NULL);
 	while (node)
 	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(node->key, 1);
-		if (node->value)
-		{
-			ft_putstr_fd("=\"", 1);
-			ft_putstr_fd(node->value, 1);
-			ft_putchar_fd('"', 1);
-		}
-		ft_putchar_fd('\n', 1);
+		if (export_print_node(node))
+			return (builtin_output_error("export"));
 		node = export_next(env, node);
+	}
+	return (0);
+}
+
+static int	export_print_node(t_env *node)
+{
+	if (builtin_write("declare -x ") || builtin_write(node->key))
+		return (1);
+	if (node->value)
+	{
+		if (builtin_write("=\"") || export_print_value(node->value)
+			|| builtin_write("\""))
+			return (1);
+	}
+	return (builtin_write("\n"));
+}
+
+static int	export_print_value(const char *value)
+{
+	char	text[2];
+
+	text[1] = '\0';
+	while (*value)
+	{
+		if (*value == '"' || *value == '\\' || *value == '$'
+			|| *value == '`')
+		{
+			if (builtin_write("\\"))
+				return (1);
+		}
+		text[0] = *value++;
+		if (builtin_write(text))
+			return (1);
 	}
 	return (0);
 }
 
 static t_env	*export_next(t_env *env, t_env *previous)
 {
-	t_env	*next;
+	t_env	*candidate;
 
-	next = NULL;
+	candidate = NULL;
 	while (env)
 	{
 		if (env->exported
 			&& (!previous || ft_strncmp(env->key, previous->key,
 					ft_strlen(env->key) + 1) > 0)
-			&& (!next || ft_strncmp(env->key, next->key,
+			&& (!candidate || ft_strncmp(env->key, candidate->key,
 					ft_strlen(env->key) + 1) < 0))
-			next = env;
+			candidate = env;
 		env = env->next;
 	}
-	return (next);
+	return (candidate);
 }

@@ -13,11 +13,11 @@
 #include "minishell.h"
 
 static char	*cd_target(t_shell *shell, char **argv);
-static int	cd_update_env(t_shell *shell, char *current_dir);
+static int	cd_old_pwd(t_shell *shell, char **old_pwd);
 
 int	builtin_cd(t_shell *shell, char **argv)
 {
-	char	*current_dir;
+	char	*old_pwd;
 	char	*target;
 	int		status;
 
@@ -28,15 +28,10 @@ int	builtin_cd(t_shell *shell, char **argv)
 	target = cd_target(shell, argv);
 	if (!target)
 		return (1);
-	current_dir = getcwd(NULL, 0);
-	if (!current_dir)
-		return (perror("minishell: cd"), 1);
-	status = 1;
-	if (chdir(target) == -1)
-		perror("minishell: cd");
-	else
-		status = cd_update_env(shell, current_dir);
-	free(current_dir);
+	if (cd_old_pwd(shell, &old_pwd))
+		return (1);
+	status = builtin_cd_move(shell, target, old_pwd);
+	free(old_pwd);
 	return (status);
 }
 
@@ -52,23 +47,16 @@ static char	*cd_target(t_shell *shell, char **argv)
 	return (target);
 }
 
-static int	cd_update_env(t_shell *shell, char *current_dir)
+static int	cd_old_pwd(t_shell *shell, char **old_pwd)
 {
-	char	*new_dir;
-	int		status;
+	char	*value;
 
-	new_dir = getcwd(NULL, 0);
-	if (!new_dir)
-	{
-		perror("minishell: cd");
-		return (1);
-	}
-	status = 0;
-	if (env_set(&shell->env, "OLDPWD", current_dir) != 0
-		|| env_set(&shell->env, "PWD", new_dir) != 0)
-		status = 1;
-	if (status)
-		perror("minishell: cd");
-	free(new_dir);
-	return (status);
+	*old_pwd = NULL;
+	value = env_get(shell->env, "PWD");
+	if (!value)
+		return (0);
+	*old_pwd = ft_strdup(value);
+	if (!*old_pwd)
+		return (ft_putendl_fd("minishell: cd: allocation failed", 2), 1);
+	return (0);
 }

@@ -56,23 +56,23 @@ static int	export_valid_key(const char *key)
 
 static int	export_parse_arg(t_shell *shell, char *arg)
 {
-	char	*equal;
+	char	*equals;
 	char	*key;
 	char	*value;
 	int		status;
 
 	if (!shell || !arg)
 		return (1);
-	equal = ft_strchr(arg, '=');
-	if (equal)
-		key = ft_substr(arg, 0, equal - arg);
+	equals = ft_strchr(arg, '=');
+	if (equals)
+		key = ft_substr(arg, 0, equals - arg);
 	else
 		key = ft_strdup(arg);
 	if (!key)
 		return (1);
 	value = NULL;
-	if (equal)
-		value = equal + 1;
+	if (equals)
+		value = equals + 1;
 	status = export_assign(shell, key, value);
 	return (free(key), status);
 }

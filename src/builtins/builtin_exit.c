@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <limits.h>
 
 static int	exit_parse_status(const char *arg, int *status);
 static int	exit_check_overflow(const char *arg, int negative,
@@ -43,11 +42,13 @@ static int	exit_parse_status(const char *arg, int *status)
 	unsigned long long	value;
 	int					negative;
 
-	if (!ft_isnumeric(arg))
-		return (0);
+	while (ft_isspace(*arg))
+		arg++;
 	negative = (*arg == '-');
 	if (*arg == '+' || *arg == '-')
 		arg++;
+	if (!ft_isdigit(*arg))
+		return (0);
 	if (exit_check_overflow(arg, negative, &value))
 		return (0);
 	*status = (unsigned char)value;
@@ -63,13 +64,15 @@ static int	exit_check_overflow(const char *arg, int negative,
 
 	limit = (unsigned long long)LLONG_MAX + negative;
 	*value = 0;
-	while (*arg)
+	while (ft_isdigit(*arg))
 	{
 		if (*value > (limit - (*arg - '0')) / 10)
 			return (1);
 		*value = *value * 10 + (*arg++ - '0');
 	}
-	return (0);
+	while (*arg == ' ' || *arg == '\t')
+		arg++;
+	return (*arg != '\0');
 }
 
 static int	exit_numeric_error(t_shell *shell, char *arg)
