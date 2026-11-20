@@ -21,8 +21,7 @@ int	builtin_unset(t_shell *shell, char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (env_unset(&shell->env, argv[i]) == -1)
-			return (1);
+		env_unset(&shell->env, argv[i]);
 		i++;
 	}
 	return (0);

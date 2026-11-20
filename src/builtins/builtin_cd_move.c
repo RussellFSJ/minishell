@@ -75,7 +75,10 @@ static int	cd_bind_path(t_shell *shell, const char *key, const char *value)
 	if (node)
 		exported = node->exported;
 	if (env_set(&shell->env, key, value) != 0)
-		return (env_unset(&shell->env, key), 1);
+	{
+		env_unset(&shell->env, key);
+		return (1);
+	}
 	node = env_find(shell->env, key);
 	node->exported = exported;
 	return (0);

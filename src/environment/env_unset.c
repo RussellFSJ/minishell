@@ -12,16 +12,16 @@
 
 #include "minishell.h"
 
-int	env_unset(t_env **env, const char *key)
+void	env_unset(t_env **env, const char *key)
 {
 	t_env	*target;
 	t_env	*current;
 
 	if (!env || !key)
-		return (0);
+		return ;
 	target = env_find(*env, key);
 	if (!target)
-		return (0);
+		return ;
 	if (target == *env)
 		*env = target->next;
 	else
@@ -34,5 +34,4 @@ int	env_unset(t_env **env, const char *key)
 	free(target->key);
 	free(target->value);
 	free(target);
-	return (0);
 }

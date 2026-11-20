@@ -19,7 +19,7 @@ void	env_add_back(t_env **env, t_env *node);
 t_env	*env_find(t_env *env, const char *key);
 char	*env_get(t_env *env, const char *key);
 int		env_set(t_env **env, const char *key, const char *value);
-int		env_unset(t_env **env, const char *key);
+void	env_unset(t_env **env, const char *key);
 char	**env_to_array(t_env *env);
 void	free_env(t_env *env);
 
