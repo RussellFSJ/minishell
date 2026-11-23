@@ -49,6 +49,47 @@ The command lifecycle is
 readline → lexer → parser → expansion → execution → cleanup
 ```
 
+## Project layout
+
+```text
+include/                   Shared types and module declarations
+libft/                     Supporting C library
+src/
+├── main.c                 Program entry point
+├── minishell.c            Interactive loop and command lifecycle
+├── builtins/              Builtin commands
+├── cleanup/               Allocation cleanup and shell shutdown
+├── environment/           Environment storage and updates
+├── executor/              Command lookup, processes, pipelines, and status
+├── expander/              Variables, quoting, and field splitting
+├── lexer/                 Tokenization
+├── parser/                Command and redirection construction
+├── redirections/          File redirections and heredocs
+├── shell_io/              Checked output helpers
+├── signals/               Prompt, child, and heredoc signal handling
+└── working_directory/     Working-directory state and path normalization
+```
+## Technical Choices
+
+The implementation separates command interpretation from execution so each
+stage can be checked and cleaned up independently.
+
+| Choice | Reason |
+| --- | --- |
+| **Modular lexer and parser** | Convert input into tokens and command structures before running anything; reject malformed operator sequences early. |
+| **Quote-aware expansion** | Preserve literal text in single quotes, expand variables inside double quotes, and split unquoted expansion results into arguments. |
+| **Environment stored in shell state** | Allow `export`, `unset`, `$VAR`, and `$?` to work across successive commands without modifying the parent terminal's environment. |
+| **Standalone builtins in the parent** | Keep state changes from `cd`, `export`, `unset`, and `exit`; temporarily save and restore standard input/output when a builtin uses redirections. |
+| **Forked pipeline commands** | Use Unix processes and pipes so commands can run concurrently while communicating through standard streams. |
+| **`dup2()` for pipes and redirections** | Connect the correct descriptors to standard input/output and close unused descriptors to avoid leaks and blocked pipelines. |
+| **Heredocs collected before command execution** | Obtain heredoc input before starting the command pipeline, and stop execution if heredoc collection is interrupted. |
+| **Context-specific signal handling** | Handle Ctrl-C and Ctrl-\ differently at the prompt, during heredoc input, and while waiting for children. |
+| **Explicit allocation and descriptor cleanup** | Release tokens, parsed commands, temporary data, and heredoc descriptors between commands. |
+| **Readline and bundled Libft** | Use Readline for interactive editing/history and Libft for reusable C utilities. |
+
+The design intentionally targets the mandatory 42 Minishell subset rather
+than a complete Bash implementation.
+
 ## Instructions
 
 ### Build and run
@@ -107,46 +148,169 @@ END
 An unquoted heredoc delimiter enables variable expansion in its body.
 Quoting the delimiter preserves the body literally.
 
-## Project layout
+## Edge Cases & Test Cases
 
-```text
-include/                   Shared types and module declarations
-libft/                     Supporting C library
-src/
-├── main.c                 Program entry point
-├── minishell.c            Interactive loop and command lifecycle
-├── builtins/              Builtin commands
-├── cleanup/               Allocation cleanup and shell shutdown
-├── environment/           Environment storage and updates
-├── executor/              Command lookup, processes, pipelines, and status
-├── expander/              Variables, quoting, and field splitting
-├── lexer/                 Tokenization
-├── parser/                Command and redirection construction
-├── redirections/          File redirections and heredocs
-├── shell_io/              Checked output helpers
-├── signals/               Prompt, child, and heredoc signal handling
-└── working_directory/     Working-directory state and path normalization
+Run `make` and `./minishell` first. **Copy and paste each block inside the
+Minishell prompt**, unless a test explicitly says to use the parent terminal.
+Expected results describe Bash-like behaviour to verify; they are not a claim
+that every case has been independently automated or passed.
+
+### 1. Quoting, empty arguments, and concatenation
+
+```sh
+echo "hello   world"
+echo '$HOME'
+echo "$HOME"
+echo a""b
+printf '[%s]\n' "" ''
 ```
-## Technical Choices
 
-The implementation separates command interpretation from execution so each
-stage can be checked and cleaned up independently.
+Expected: double-quoted spaces are preserved; single quotes print `$HOME`
+literally; double quotes expand it; `a""b` becomes `ab`; `printf` prints two
+lines containing `[]` (two empty arguments).
 
-| Choice | Reason |
+### 2. Variable expansion and field splitting
+
+```sh
+export MS_WORDS="one two"
+printf '<%s>\n' "$MS_WORDS"
+printf '<%s>\n' $MS_WORDS
+echo '$MS_WORDS'
+export MS_EMPTY=
+printf '<%s>\n' "x" "$MS_EMPTY" "y"
+unset MS_WORDS
+unset MS_EMPTY
+```
+
+Expected: quoted `"$MS_WORDS"` produces one argument `<one two>`;
+unquoted `$MS_WORDS` produces `<one>` and `<two>`; single quotes print
+`$MS_WORDS` literally; the quoted empty value produces `<>` between `<x>`
+and `<y>`.
+
+### 3. Builtins and state persistence
+
+```sh
+cd /tmp
+pwd
+export MS_PERSIST=42
+echo "$MS_PERSIST"
+env | grep '^MS_PERSIST='
+unset MS_PERSIST
+env | grep '^MS_PERSIST='
+echo $?
+```
+
+Expected: `pwd` prints `/tmp`, the variable is visible to `echo` and `env`,
+and the final `grep` finds nothing and returns status `1`. This also confirms
+that `cd` and `export` affect the shell rather than a short-lived child.
+
+### 4. Pipelines and exit-status propagation
+
+```sh
+printf 'alpha\nbeta\ngamma\n' | grep beta | wc -l
+false | true
+echo $?
+true | false
+echo $?
+```
+
+Expected: the first pipeline prints `1` (possibly padded by `wc`); the next
+statuses are `0` and `1`, respectively. `$?` must reflect the **last command**
+in the foreground pipeline, not the first command.
+
+### 5. Input, output, append, and multiple redirections
+
+```sh
+echo first > /tmp/minishell_readme_a.txt
+echo second >> /tmp/minishell_readme_a.txt
+cat < /tmp/minishell_readme_a.txt
+echo final > /tmp/minishell_readme_a.txt > /tmp/minishell_readme_b.txt
+wc -c < /tmp/minishell_readme_a.txt
+cat /tmp/minishell_readme_b.txt
+```
+
+Expected: `cat` first prints `first` and `second`; `wc -c` then prints `0`
+because the first output target was truncated; the second file contains
+`final`. Redirections are applied from left to right.
+
+### 6. Ambiguous redirection target
+
+```sh
+export MS_TARGET="one two"
+echo hello > $MS_TARGET
+echo $?
+unset MS_TARGET
+```
+
+Expected: an ambiguous-redirect error and a nonzero status, because the
+unquoted expansion produces multiple words rather than one pathname. No
+output file should be created for this command.
+
+### 7. Heredocs: expanded versus literal bodies
+
+Enter each heredoc line separately if terminal pasting behaves unexpectedly.
+
+```sh
+export MS_HD=expanded
+cat << END
+$MS_HD
+END
+cat << 'END'
+$MS_HD
+END
+unset MS_HD
+```
+
+Expected: the first `cat` prints `expanded`; the second prints the literal
+text `$MS_HD`. The delimiter quoting determines whether heredoc content
+is expanded.
+
+### 8. Syntax errors, missing files, and unknown commands
+
+```sh
+echo hello |
+echo $?
+cat < /tmp/minishell_readme_nonexistent_42_file
+echo $?
+minishell_nonexistent_42_command
+echo $?
+export 9INVALID=value
+echo $?
+```
+
+Expected: an incomplete pipeline is a syntax error (typically `2`); a missing
+input file returns a nonzero status; an unknown command returns `127`; an
+invalid export identifier returns a nonzero status. Exact error wording may
+vary.
+
+### 9. Signals (interactive; do not paste Ctrl-key combinations)
+
+| Action at the Minishell prompt | Expected behaviour |
 | --- | --- |
-| **Modular lexer and parser** | Convert input into tokens and command structures before running anything; reject malformed operator sequences early. |
-| **Quote-aware expansion** | Preserve literal text in single quotes, expand variables inside double quotes, and split unquoted expansion results into arguments. |
-| **Environment stored in shell state** | Allow `export`, `unset`, `$VAR`, and `$?` to work across successive commands without modifying the parent terminal's environment. |
-| **Standalone builtins in the parent** | Keep state changes from `cd`, `export`, `unset`, and `exit`; temporarily save and restore standard input/output when a builtin uses redirections. |
-| **Forked pipeline commands** | Use Unix processes and pipes so commands can run concurrently while communicating through standard streams. |
-| **`dup2()` for pipes and redirections** | Connect the correct descriptors to standard input/output and close unused descriptors to avoid leaks and blocked pipelines. |
-| **Heredocs collected before command execution** | Obtain heredoc input before starting the command pipeline, and stop execution if heredoc collection is interrupted. |
-| **Context-specific signal handling** | Handle Ctrl-C and Ctrl-\ differently at the prompt, during heredoc input, and while waiting for children. |
-| **Explicit allocation and descriptor cleanup** | Release tokens, parsed commands, temporary data, and heredoc descriptors between commands. |
-| **Readline and bundled Libft** | Use Readline for interactive editing/history and Libft for reusable C utilities. |
+| Type `sleep 30`, then press **Ctrl-C** | Interrupt `sleep`; subsequent `echo $?` prints `130`. |
+| Type `sleep 30`, then press **Ctrl-\** | Quit `sleep`; subsequent `echo $?` prints `131`. |
+| Press **Ctrl-C** on an empty prompt | Redisplay the prompt without exiting the shell. |
+| Start `cat << END`, then press **Ctrl-C** | Cancel heredoc input; subsequent `echo $?` prints `130`. |
+| Press **Ctrl-D** on an empty prompt | Exit Minishell. |
 
-The design intentionally targets the mandatory 42 Minishell subset rather
-than a complete Bash implementation.
+### 10. Build and leak checks (parent terminal)
+
+Run these **outside** Minishell from the repository root:
+
+```sh
+make fclean
+make
+make
+norminette include src libft
+valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./minishell
+```
+
+The second `make` should avoid unnecessary relinking. Check for compilation
+errors, Norminette violations, allocations still owned by the project, and
+unclosed file descriptors. Readline may retain its own allocations. Run
+Valgrind on repeated command, heredoc, and pipeline sessions rather than
+judging a single command only. `norminette` and `valgrind` must be installed
+separately if they are not already available.
 
 ## Resources
 The following references are useful for understanding Unix shell behavior and the system interfaces involved:
