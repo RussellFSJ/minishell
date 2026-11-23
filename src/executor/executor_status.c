@@ -12,12 +12,17 @@
 
 #include "minishell.h"
 
-int	executor_status_collect(pid_t last_pid)
+int	executor_status_collect(pid_t pid, int *interrupted)
 {
 	int	wait_status;
 
-	if (waitpid(last_pid, &wait_status, 0) == -1)
-		return (-1);
+	while (waitpid(pid, &wait_status, 0) == -1)
+	{
+		if (errno != EINTR)
+			return (1);
+	}
+	if (WIFSIGNALED(wait_status) && WTERMSIG(wait_status) == SIGINT)
+		*interrupted = 1;
 	return (executor_status_decode(wait_status));
 }
 
@@ -26,10 +31,6 @@ int	executor_status_decode(int wait_status)
 	if (WIFEXITED(wait_status))
 		return (WEXITSTATUS(wait_status));
 	if (WIFSIGNALED(wait_status))
-	{
-		if (WTERMSIG(wait_status) == SIGINT)
-			write(STDOUT_FILENO, "\n", 1);
 		return (128 + WTERMSIG(wait_status));
-	}
 	return (1);
 }

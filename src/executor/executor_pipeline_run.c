@@ -104,28 +104,24 @@ static int	pipeline_wait(t_shell *shell, int *pids,
 {
 	size_t	i;
 	int		result;
+	int		interrupted;
 
 	result = 1;
-	if (child_count && !spawn_failed)
-	{
-		result = executor_status_collect(pids[child_count - 1]);
-		while (result == -1 && errno == EINTR)
-			result = executor_status_collect(pids[child_count - 1]);
-		child_count--;
-	}
+	interrupted = 0;
 	i = 0;
 	while (i < child_count)
 	{
 		if (spawn_failed)
 			kill(pids[i], SIGKILL);
-		while (waitpid(pids[i], NULL, 0) == -1 && errno == EINTR)
-			;
+		result = executor_status_collect(pids[i], &interrupted);
 		i++;
 	}
 	free(pids);
 	shell->pids = NULL;
-	if (result < 0)
-		result = 1;
+	if (interrupted && write_all(STDOUT_FILENO, "\n", 1))
+		perror("minishell: pipeline output");
+	if (spawn_failed)
+		return (1);
 	return (result);
 }
 
