@@ -127,6 +127,26 @@ src/
 ├── signals/               Prompt, child, and heredoc signal handling
 └── working_directory/     Working-directory state and path normalization
 ```
+## Technical Choices
+
+The implementation separates command interpretation from execution so each
+stage can be checked and cleaned up independently.
+
+| Choice | Reason |
+| --- | --- |
+| **Modular lexer and parser** | Convert input into tokens and command structures before running anything; reject malformed operator sequences early. |
+| **Quote-aware expansion** | Preserve literal text in single quotes, expand variables inside double quotes, and split unquoted expansion results into arguments. |
+| **Environment stored in shell state** | Allow `export`, `unset`, `$VAR`, and `$?` to work across successive commands without modifying the parent terminal's environment. |
+| **Standalone builtins in the parent** | Keep state changes from `cd`, `export`, `unset`, and `exit`; temporarily save and restore standard input/output when a builtin uses redirections. |
+| **Forked pipeline commands** | Use Unix processes and pipes so commands can run concurrently while communicating through standard streams. |
+| **`dup2()` for pipes and redirections** | Connect the correct descriptors to standard input/output and close unused descriptors to avoid leaks and blocked pipelines. |
+| **Heredocs collected before command execution** | Obtain heredoc input before starting the command pipeline, and stop execution if heredoc collection is interrupted. |
+| **Context-specific signal handling** | Handle Ctrl-C and Ctrl-\ differently at the prompt, during heredoc input, and while waiting for children. |
+| **Explicit allocation and descriptor cleanup** | Release tokens, parsed commands, temporary data, and heredoc descriptors between commands. |
+| **Readline and bundled Libft** | Use Readline for interactive editing/history and Libft for reusable C utilities. |
+
+The design intentionally targets the mandatory 42 Minishell subset rather
+than a complete Bash implementation.
 
 ## Resources
 The following references are useful for understanding Unix shell behavior and the system interfaces involved:
