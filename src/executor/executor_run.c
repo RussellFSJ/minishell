@@ -14,14 +14,12 @@
 
 static int	parent_builtin(t_shell *shell, t_command *cmd);
 
-int	executor_run(t_shell *shell, t_command *cmds)
+void	executor_run(t_shell *shell, t_command *cmds)
 {
 	int	status;
 
-	if (!shell)
-		return (1);
-	if (!cmds)
-		return (shell->last_status);
+	if (!shell || !cmds)
+		return ;
 	status = heredoc_collect(shell, cmds);
 	if (status == 0)
 	{
@@ -36,7 +34,6 @@ int	executor_run(t_shell *shell, t_command *cmds)
 	}
 	heredoc_close_fds(cmds, NULL);
 	shell->last_status = status;
-	return (status);
 }
 
 static int	parent_builtin(t_shell *shell, t_command *cmd)

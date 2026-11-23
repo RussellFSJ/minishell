@@ -6,7 +6,7 @@
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:13:53 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/11/20 15:26:17 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/11/23 19:11:41 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ t_quote	expand_quote_update(char c, t_quote quote);
 int		expand_append_text(char **result, const char *text);
 int		expand_append_char(char **result, char c);
 int		expand_argv(t_shell *shell, char ***argv);
-int		expand_redirs(t_shell *shell, t_redir *redir);
+int		expand_redirs(t_redir *redir);
 
 #endif

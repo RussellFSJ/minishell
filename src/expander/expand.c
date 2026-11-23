@@ -6,7 +6,7 @@
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:15:08 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/11/20 15:26:17 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/11/23 19:11:55 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	expand(t_shell *shell, t_command *cmds)
 	{
 		if (expand_argv(shell, &cmds->argv) == -1)
 			return (-1);
-		if (expand_redirs(shell, cmds->redirs) == -1)
+		if (expand_redirs(cmds->redirs) == -1)
 			return (-1);
 		cmds = cmds->next;
 	}

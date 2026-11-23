@@ -6,17 +6,16 @@
 /*   By: rfoo <rfoo@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 03:55:57 by ebin-ahm          #+#    #+#             */
-/*   Updated: 2026/11/20 15:26:17 by rfoo             ###   ########.fr       */
+/*   Updated: 2026/11/23 19:11:28 by rfoo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	expand_redirs(t_shell *shell, t_redir *redir)
+int	expand_redirs(t_redir *redir)
 {
 	char	*expanded;
 
-	(void)shell;
 	while (redir)
 	{
 		if (redir->type == TOKEN_HEREDOC)
