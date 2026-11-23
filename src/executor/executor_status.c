@@ -21,15 +21,15 @@ int	executor_status_collect(pid_t last_pid)
 	return (executor_status_decode(wait_status));
 }
 
-int executor_status_decode(int wait_status)
+int	executor_status_decode(int wait_status)
 {
-    if (WIFEXITED(wait_status))
-        return (WEXITSTATUS(wait_status));
-    if (WIFSIGNALED(wait_status))
-    {
-        if (WTERMSIG(wait_status) == SIGINT)
-            write(STDOUT_FILENO, "\n", 1);
-        return (128 + WTERMSIG(wait_status));
-    }
-    return (1);
+	if (WIFEXITED(wait_status))
+		return (WEXITSTATUS(wait_status));
+	if (WIFSIGNALED(wait_status))
+	{
+		if (WTERMSIG(wait_status) == SIGINT)
+			write(STDOUT_FILENO, "\n", 1);
+		return (128 + WTERMSIG(wait_status));
+	}
+	return (1);
 }
