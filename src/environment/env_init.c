@@ -45,7 +45,7 @@ static int	env_add_entry(t_env **env, char *entry)
 	key = ft_substr(entry, 0, equals - entry);
 	if (!key)
 		return (-1);
-	node = env_new(key, equals + 1, 1);
+	node = env_new(key, equals + 1);
 	free(key);
 	if (!node)
 		return (-1);

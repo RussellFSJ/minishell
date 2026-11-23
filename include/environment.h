@@ -14,7 +14,7 @@
 # define ENVIRONMENT_H
 
 t_env	*env_init(char **envp);
-t_env	*env_new(char *key, char *value, int exported);
+t_env	*env_new(const char *key, const char *value);
 void	env_add_back(t_env **env, t_env *node);
 t_env	*env_find(t_env *env, const char *key);
 char	*env_get(t_env *env, const char *key);

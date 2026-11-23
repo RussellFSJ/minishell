@@ -23,7 +23,7 @@ int	env_set(t_env **env, const char *key, const char *value)
 	node = env_find(*env, key);
 	if (node)
 		return (env_replace_value(node, value));
-	node = env_new((char *)key, (char *)value, 1);
+	node = env_new(key, value);
 	if (!node)
 		return (-1);
 	env_add_back(env, node);

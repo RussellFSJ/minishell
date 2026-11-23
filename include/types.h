@@ -61,6 +61,7 @@ typedef struct s_shell
 	char		*line;
 	t_command	*commands;
 	int			*pids;
+	int			heredoc_sequence;
 	int			last_status;
 	int			should_exit;
 }	t_shell;

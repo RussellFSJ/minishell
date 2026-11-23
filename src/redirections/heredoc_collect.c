@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-static char	*heredoc_name(void);
-static int	heredoc_temp(int *read_fd);
+static char	*heredoc_name(t_shell *shell);
+static int	heredoc_temp(t_shell *shell, int *read_fd);
 static int	heredoc_one(t_shell *shell, t_redir *redir);
 
 int	heredoc_collect(t_shell *shell, t_command *cmds)
@@ -41,21 +41,26 @@ int	heredoc_collect(t_shell *shell, t_command *cmds)
 	return (0);
 }
 
-static char	*heredoc_name(void)
+static char	*heredoc_name(t_shell *shell)
 {
-	static int	sequence;
-	char		*number;
-	char		*name;
+	char	*number;
+	char	*name;
 
-	number = ft_itoa(sequence++);
+	number = ft_itoa(shell->heredoc_sequence);
 	if (!number)
 		return (NULL);
 	name = ft_strjoin("/tmp/minishell-heredoc-", number);
 	free(number);
+	if (!name)
+		return (NULL);
+	if (shell->heredoc_sequence == INT_MAX)
+		shell->heredoc_sequence = 0;
+	else
+		shell->heredoc_sequence++;
 	return (name);
 }
 
-static int	heredoc_temp(int *read_fd)
+static int	heredoc_temp(t_shell *shell, int *read_fd)
 {
 	char		*name;
 	int			write_fd;
@@ -63,7 +68,7 @@ static int	heredoc_temp(int *read_fd)
 	write_fd = -1;
 	while (write_fd < 0)
 	{
-		name = heredoc_name();
+		name = heredoc_name(shell);
 		if (!name)
 			return (-1);
 		write_fd = open(name, O_WRONLY | O_CREAT | O_EXCL, 0600);
@@ -86,7 +91,7 @@ static int	heredoc_one(t_shell *shell, t_redir *redir)
 	if (redir->fd >= 0)
 		close(redir->fd);
 	redir->fd = -1;
-	write_fd = heredoc_temp(&redir->fd);
+	write_fd = heredoc_temp(shell, &redir->fd);
 	if (write_fd < 0 || redir->fd < 0)
 	{
 		perror("minishell: heredoc");
