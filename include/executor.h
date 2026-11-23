@@ -13,12 +13,12 @@
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-int		executor_run(t_shell *shell, t_command *cmds);
+void	executor_run(t_shell *shell, t_command *cmds);
 int		executor_pipeline_run(t_shell *shell, t_command *cmds);
 char	*executor_path_resolve(t_env *env, const char *name);
 void	executor_child_run(t_shell *shell, t_command *cmd);
 void	executor_child_exit(t_shell *shell, int status);
-int		executor_status_collect(t_shell *shell, int last_pid);
+int		executor_status_collect(pid_t last_pid);
 int		executor_status_decode(int wait_status);
 
 #endif

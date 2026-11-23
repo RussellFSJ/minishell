@@ -12,14 +12,13 @@
 
 #include "minishell.h"
 
-int	executor_status_collect(t_shell *shell, int last_pid)
+int	executor_status_collect(pid_t last_pid)
 {
 	int	wait_status;
 
 	if (waitpid(last_pid, &wait_status, 0) == -1)
 		return (-1);
-	shell->last_status = executor_status_decode(wait_status);
-	return (shell->last_status);
+	return (executor_status_decode(wait_status));
 }
 
 int	executor_status_decode(int wait_status)

@@ -31,7 +31,7 @@ int	executor_pipeline_run(t_shell *shell, t_command *cmds)
 		return (shell->last_status);
 	pids = malloc(sizeof(int) * command_count(cmds));
 	if (!pids)
-		return (shell->last_status = 1);
+		return (1);
 	shell->pids = pids;
 	child_count = 0;
 	input_fd = -1;
@@ -108,9 +108,9 @@ static int	pipeline_wait(t_shell *shell, int *pids,
 	result = 1;
 	if (child_count && !spawn_failed)
 	{
-		result = executor_status_collect(shell, pids[child_count - 1]);
+		result = executor_status_collect(pids[child_count - 1]);
 		while (result == -1 && errno == EINTR)
-			result = executor_status_collect(shell, pids[child_count - 1]);
+			result = executor_status_collect(pids[child_count - 1]);
 		child_count--;
 	}
 	i = 0;
@@ -126,7 +126,7 @@ static int	pipeline_wait(t_shell *shell, int *pids,
 	shell->pids = NULL;
 	if (result < 0)
 		result = 1;
-	return (shell->last_status = result);
+	return (result);
 }
 
 static size_t	command_count(t_command *cmd)
