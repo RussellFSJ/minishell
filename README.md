@@ -4,6 +4,7 @@
 
 A small Bash-inspired command interpreter written in C for the 42 curriculum.
 
+
 ## Description
 
 Minishell reads commands, interprets quotes and operators, expands environment
@@ -128,6 +129,7 @@ src/
 ```
 
 ## Resources
+The following references are useful for understanding Unix shell behavior and the system interfaces involved:
 
 - [GNU Bash Reference Manual](https://www.gnu.org/software/bash/manual/) —
   reference behavior for quoting, expansion, redirections, and builtins.
@@ -140,8 +142,8 @@ src/
 
 ### AI usage
 
-ChatGPT and Codex assisted with explanations of C and Unix concepts, code
-review, implementation fixes, refactoring, and documentation.
+ChatGPT and Claude assisted with explanations of C and Unix concepts, code
+review, implementation fixes, refactoring, and testing edge cases.
 
 The authors are responsible for reviewing, understanding, and validating
 the submitted implementation.
