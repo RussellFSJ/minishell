@@ -21,7 +21,8 @@ int	executor_status_collect(pid_t pid, int *interrupted)
 		if (errno != EINTR)
 			return (1);
 	}
-	if (WIFSIGNALED(wait_status) && WTERMSIG(wait_status) == SIGINT)
+	if (WIFSIGNALED(wait_status) && (WTERMSIG(wait_status) == SIGINT
+			|| WTERMSIG(wait_status) == SIGQUIT))
 		*interrupted = 1;
 	return (executor_status_decode(wait_status));
 }
